@@ -133,6 +133,7 @@ public class EmployeeDataService {
             String[] row = employeeData.get(i);
             if (row[0].equals(record[0])) {
                 employeeData.set(i, record);
+                break;
             }
         }
 
