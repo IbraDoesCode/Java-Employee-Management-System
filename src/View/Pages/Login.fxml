@@ -19,7 +19,7 @@
             </Label>
             <TextField fx:id="usernameTextField" minHeight="30.0" minWidth="220.0" promptText="Username" />
             <PasswordField fx:id="passwordField" minHeight="30.0" minWidth="220.0" promptText="Password" />
-            <Button fx:id="loginButton" minHeight="30.0" minWidth="220.0" onAction="#login" style="-fx-background-color: black;" text="Login" textFill="WHITE" />
+            <Button minHeight="30.0" minWidth="220.0" onAction="#login" style="-fx-background-color: black;" text="Login" textFill="WHITE" />
          </children>
       </VBox>
    </children>
