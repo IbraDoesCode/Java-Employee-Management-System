@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EmployeeDataService {
+public class EmployeeRecordService {
 
     private final CsvHandler csvHandler;
     private final String EMPLOYEE_DATA_FILE = "Data/employeeData.csv";
     private final List<String[]> employeeData;
 
-    public EmployeeDataService() {
+    public EmployeeRecordService() {
         this.csvHandler = new CsvHandler(EMPLOYEE_DATA_FILE);
 
         try {

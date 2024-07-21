@@ -3,11 +3,11 @@ package Service;
 import Model.Employee;
 import javafx.collections.ObservableList;
 
-public class EmployeeListService {
+public class EmployeeTableService {
 
     private final ObservableList<Employee> employeeList;
 
-    public EmployeeListService(ObservableList<Employee> employeeList) {
+    public EmployeeTableService(ObservableList<Employee> employeeList) {
         this.employeeList = employeeList;
     }
 

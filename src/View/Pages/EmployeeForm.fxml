@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="600.0" prefHeight="0.0" prefWidth="0.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AddEmployeeController">
+<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="600.0" prefHeight="0.0" prefWidth="0.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EmployeeFormController">
   <content>
     <AnchorPane minHeight="1000.0" minWidth="600.0">
          <children>
@@ -119,7 +119,7 @@
                   <Label text="Clothing Allowance" GridPane.rowIndex="28" />
                   <Label text="Phone Allowance" GridPane.rowIndex="29" />
                   <TextField fx:id="phoneTextField" style="-fx-background-color: transparent; -fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="29" />
-                  <Button fx:id="saveButton" minHeight="26.0" minWidth="50.0" mnemonicParsing="false" onAction="#onSaveNewEmployeeRecord" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="30">
+                  <Button fx:id="saveButton" minHeight="26.0" minWidth="50.0" mnemonicParsing="false" onAction="#handleSaveRecord" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="30">
                      <GridPane.margin>
                         <Insets left="265.0" />
                      </GridPane.margin>

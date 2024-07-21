@@ -28,12 +28,12 @@
     <left>
         <VBox fillWidth="false" minHeight="670.0" minWidth="200.0" prefHeight="0.0" prefWidth="0.0" spacing="20.0" style="-fx-background-color: Gray;">
          <children>
-                  <Button minHeight="30.0" minWidth="150.0" mnemonicParsing="false" onAction="#showAddEmployeeForm" text="Add">
+                  <Button minHeight="30.0" minWidth="150.0" mnemonicParsing="false" onAction="#handleAddNewRecord" text="Add">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </Button>
-                  <Button minHeight="30.0" minWidth="150.0" mnemonicParsing="false" text="Update">
+                  <Button minHeight="30.0" minWidth="150.0" mnemonicParsing="false" onAction="#handleUpdateRecord" text="Update">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>

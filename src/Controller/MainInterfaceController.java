@@ -1,7 +1,8 @@
 package Controller;
 
 import Model.Employee;
-import Service.EmployeeDataService;
+import Service.EmployeeRecordService;
+import Service.EmployeeTableService;
 import Util.AlertUtil;
 import com.opencsv.exceptions.CsvException;
 import javafx.collections.FXCollections;
@@ -21,8 +22,8 @@ import java.util.List;
 
 public class MainInterfaceController {
 
-    private final EmployeeDataService empDataService;
-
+    private final EmployeeRecordService empDataService;
+    private final EmployeeTableService employeeTableService;
     private final ObservableList<Employee> employeeObservableList;
 
     @FXML
@@ -35,8 +36,9 @@ public class MainInterfaceController {
     private TableColumn<Employee, String> firstNameColumn, lastNameColumn, tinNoColumn, sssNoColumn, philhealthNoColumn, pagibigNoColumn;
 
     public MainInterfaceController() {
-        empDataService = new EmployeeDataService();
+        empDataService = new EmployeeRecordService();
         employeeObservableList = FXCollections.observableArrayList();
+        employeeTableService = new EmployeeTableService(employeeObservableList);
     }
 
     @FXML
@@ -46,13 +48,6 @@ public class MainInterfaceController {
         setDataToEmployeeTable();
     }
 
-    @FXML
-    private void showAddEmployeeForm() {
-        AddEmployeeController addEmployeeController = new AddEmployeeController();
-        addEmployeeController.setEmployeeList(employeeObservableList);
-        addEmployeeController.showAddNewEmployeeStage();
-    }
-
     public void initializeMainUI() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/MainInterface.fxml"));
         Parent root = loader.load();
@@ -60,6 +55,42 @@ public class MainInterfaceController {
         stage.setTitle("MotorPH HR System");
         stage.setScene(new Scene(root));
         stage.show();
+    }
+
+    @FXML
+    private void handleAddNewRecord() {
+        showEmployeeForm(false, null);
+    }
+
+    @FXML
+    private void handleUpdateRecord() {
+        Employee selectedEmployee = selectedEmployee();
+        if (selectedEmployee != null) {
+            showEmployeeForm(true, selectedEmployee);
+        } else {
+            AlertUtil.showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an employee to update.");
+        }
+    }
+
+    @FXML
+    public void handleDeleteRecord() {
+        Employee selectedEmployee = selectedEmployee();
+        if (selectedEmployee == null) {
+            AlertUtil.showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee record to delete.");
+            return;
+        }
+
+        boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Deletion", "Are you sure you want to delete this employee record? This action cannot be undone.");
+        if (confirmed) {
+            try {
+                empDataService.deleteEmployeeRecord(selectedEmployee.getEmployeeID());
+                employeeTableService.removeEmployee(selectedEmployee);
+                AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Record Deletion", "Record deleted successfully");
+                refreshEmployeeData();
+            } catch (IOException | CsvException e) {
+                AlertUtil.showAlert(Alert.AlertType.ERROR, "Deletion Error", "An error occurred while deleting the record.");
+            }
+        }
     }
 
     private void initializeTableColumns() {
@@ -84,10 +115,9 @@ public class MainInterfaceController {
     private void refreshEmployeeData() {
         try {
             List<Employee> employeeList = empDataService.retrieveListOfEmployeeObject();
-            employeeObservableList.clear();
-            employeeObservableList.addAll(employeeList);
+            employeeObservableList.setAll(employeeList);
         } catch (IOException | CsvException e) {
-            throw new RuntimeException(e);
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Data Error", "An error occurred while retrieving the employee data.");
         }
     }
 
@@ -99,26 +129,27 @@ public class MainInterfaceController {
         return employeeTable.getSelectionModel().getSelectedItem();
     }
 
-    @FXML
-    public void handleDeleteRecord() {
+    private void showEmployeeForm(boolean isUpdateMode, Employee employee) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/EmployeeForm.fxml"));
+            Parent root = loader.load();
 
-        if (selectedEmployee() == null) {
-            AlertUtil.showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee record to delete.");
-            return;
-        }
+            EmployeeFormController employeeFormController = loader.getController();
+            employeeFormController.setEmployeeListService(employeeTableService);
+            employeeFormController.setUpdateMode(isUpdateMode);
 
-        int id = selectedEmployee().getEmployeeID();
-
-        boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Deletion", "Are you sure you want to delete this employee record? This action cannot be undone.");
-
-        if (confirmed) {
-            try {
-                empDataService.deleteEmployeeRecord(id);
-                refreshEmployeeData();
-                AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Record Deletion", "Record deleted successfully");
-            } catch (IOException | CsvException e) {
-                throw new RuntimeException(e);
+            if (isUpdateMode && employee != null) {
+                employeeFormController.setEmployee(employee);
             }
+
+            Stage stage = new Stage();
+            stage.setTitle(isUpdateMode ? "Update Employee" : "Add New Employee");
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+        } catch (IOException e) {
+            AlertUtil.showAlert(Alert.AlertType.ERROR, "Form Error", "An error occurred while loading the employee form.");
         }
     }
+
 }
