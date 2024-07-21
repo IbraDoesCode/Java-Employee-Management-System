@@ -1,9 +1,11 @@
 package Controller;
 
+import Model.Employee;
 import Service.EmployeeDataService;
 import Util.AlertUtil;
 import com.opencsv.exceptions.CsvException;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +22,8 @@ import java.time.format.DateTimeFormatter;
 
 public class AddEmployeeController {
 
-    private EmployeeDataService eds = new EmployeeDataService();
+    private EmployeeDataService empDataService;
+    private ObservableList<Employee> employeeList;
 
     // Personal Details Components
     @FXML
@@ -84,9 +87,18 @@ public class AddEmployeeController {
     @FXML
     private TextField phoneTextField;
 
+    public AddEmployeeController() {
+        empDataService = new EmployeeDataService();
+    }
+
+    public void setEmployeeList(ObservableList<Employee> employeeList) {
+        this.employeeList = employeeList;
+    }
+
     @FXML
     private void initialize() {
         initializeComboBox();
+        employeeIDTextField.setText(String.valueOf(empDataService.getNewEmployeeID()));
     }
 
     private void initializeComboBox() {
@@ -105,6 +117,7 @@ public class AddEmployeeController {
             Parent root = loader.load();
 
             AddEmployeeController controller = loader.getController();
+            controller.setEmployeeList(employeeList);
 
             Stage stage = new Stage();
             stage.setTitle("Add New Employee");
@@ -160,7 +173,6 @@ public class AddEmployeeController {
         double hourlyRate = (basicSalary / 21) / 8;
 
         return new String[]{
-
                 employeeIDTextField.getText(),
                 lastNameTextField.getText(),
                 firstNameTextField.getText(),
@@ -208,7 +220,8 @@ public class AddEmployeeController {
             if (confirmed) {
 
                 String[] newEmployeeRecord = retrieveInputAsStringArray();
-                eds.addEmployeeRecord(newEmployeeRecord);
+                empDataService.addEmployeeRecord(newEmployeeRecord);
+                employeeList.add(empDataService.createNewEmployeeFromArrayInput(newEmployeeRecord));
 
                 AlertUtil.showAlert(Alert.AlertType.INFORMATION,
                         "Record Added Successfully",
