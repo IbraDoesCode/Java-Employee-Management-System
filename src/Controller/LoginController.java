@@ -33,6 +33,7 @@ public class LoginController {
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("MotorPH Login Portal");
+        stage.setResizable(false);
         stage.setScene(new Scene(root));
         stage.show();
     }
