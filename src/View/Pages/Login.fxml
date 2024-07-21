@@ -4,22 +4,23 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="500.0" minWidth="750.0" prefWidth="0.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+
+<VBox alignment="CENTER" fillWidth="false" minHeight="600.0" minWidth="800.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
    <children>
-      <AnchorPane layoutX="210.0" layoutY="100.0" minHeight="300.0" minWidth="330.0" style="-fx-background-color: white; -fx-background-radius: 10px;">
+      <VBox alignment="CENTER" fillWidth="false" minHeight="300.0" minWidth="400.0" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 10px;" VBox.vgrow="NEVER">
          <children>
-            <Label layoutX="88.0" layoutY="24.0" text="MotorPH">
+            <Label text="MotorPH">
                <font>
                   <Font name="Forte" size="36.0" />
                </font>
             </Label>
-            <TextField fx:id="usernameTextField" layoutX="53.0" layoutY="99.0" minHeight="30.0" minWidth="220.0" promptText="Username" />
-            <PasswordField fx:id="passwordField" layoutX="54.0" layoutY="143.0" minHeight="30.0" minWidth="220.0" promptText="Password" />
-            <Button fx:id="loginButton" layoutX="54.0" layoutY="202.0" minHeight="30.0" minWidth="220.0" onAction="#login" style="-fx-background-color: black;" text="Login" textFill="WHITE" />
+            <TextField fx:id="usernameTextField" minHeight="30.0" minWidth="220.0" promptText="Username" />
+            <PasswordField fx:id="passwordField" minHeight="30.0" minWidth="220.0" promptText="Password" />
+            <Button fx:id="loginButton" minHeight="30.0" minWidth="220.0" onAction="#login" style="-fx-background-color: black;" text="Login" textFill="WHITE" />
          </children>
-      </AnchorPane>
+      </VBox>
    </children>
-</AnchorPane>
+</VBox>
