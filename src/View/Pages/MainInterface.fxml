@@ -26,62 +26,56 @@
         </HBox>
     </top>
     <left>
-        <VBox minHeight="670.0" minWidth="200.0" prefHeight="0.0" prefWidth="0.0" spacing="20.0" style="-fx-background-color: Gray;" BorderPane.alignment="CENTER">
+        <VBox fillWidth="false" minHeight="670.0" minWidth="200.0" prefHeight="0.0" prefWidth="0.0" spacing="20.0" style="-fx-background-color: Gray;">
          <children>
-                  <Button minHeight="30.0" minWidth="150.0" mnemonicParsing="false" onAction="#showAddEmployeeForm" text="➕ Add">
+                  <Button minHeight="30.0" minWidth="150.0" mnemonicParsing="false" onAction="#showAddEmployeeForm" text="Add">
                <VBox.margin>
                   <Insets />
                </VBox.margin>
             </Button>
-                  <Button fx:id="updateButton" minHeight="30.0" minWidth="150.0" mnemonicParsing="false" text="Update">
+                  <Button minHeight="30.0" minWidth="150.0" mnemonicParsing="false" text="Update">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-                  <Button fx:id="deleteButton" minHeight="30.0" minWidth="150.0" mnemonicParsing="false" onAction="#handleDeleteRecord" text="Delete">
+                  <Button minHeight="30.0" minWidth="150.0" mnemonicParsing="false" onAction="#handleDeleteRecord" style="-fx-background-color: red;" text="Delete" textFill="WHITE">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Button>
             <Button layoutX="10.0" layoutY="132.0" minHeight="30.0" minWidth="150.0" mnemonicParsing="false" text="Compute">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </Button>
-            <Button layoutX="35.0" layoutY="392.0" minHeight="30.0" minWidth="150.0" mnemonicParsing="false" text="Apply Leave">
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </Button>
          </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
          <padding>
-            <Insets left="25.0" top="190.0" />
+            <Insets left="25.0" top="200.0" />
          </padding></VBox>
     </left>
     <center>
-      <VBox>
-         <children>
-                <TableView fx:id="employeeTable" prefHeight="625.0" prefWidth="900.0">
-                    <columns>
-                        <TableColumn fx:id="employeeIdColumn" minWidth="137.0" text="Employee #" />
-                        <TableColumn fx:id="lastNameColumn" minWidth="137.0" text="Last Name" />
-                        <TableColumn fx:id="firstNameColumn" minWidth="137.0" text="First Name" />
-                        <TableColumn fx:id="tinNoColumn" minWidth="137.0" text="Tin #" />
-                        <TableColumn fx:id="sssNoColumn" minWidth="137.0" text="SSS #" />
-                        <TableColumn fx:id="philhealthNoColumn" minWidth="137.0" text="Philhealth #" />
-                        <TableColumn fx:id="pagibigNoColumn" minWidth="137.0" text="Pagibig #" />
-                    </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-               <VBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </VBox.margin>
-                </TableView>
-         </children>
+          <TableView fx:id="employeeTable" prefHeight="625.0" prefWidth="900.0">
+              <columns>
+                  <TableColumn fx:id="employeeIdColumn" minWidth="137.0" text="Employee #" />
+                  <TableColumn fx:id="lastNameColumn" minWidth="137.0" text="Last Name" />
+                  <TableColumn fx:id="firstNameColumn" minWidth="137.0" text="First Name" />
+                  <TableColumn fx:id="tinNoColumn" minWidth="137.0" text="Tin #" />
+                  <TableColumn fx:id="sssNoColumn" minWidth="137.0" text="SSS #" />
+                  <TableColumn fx:id="philhealthNoColumn" minWidth="137.0" text="Philhealth #" />
+                  <TableColumn fx:id="pagibigNoColumn" minWidth="137.0" text="Pagibig #" />
+              </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
          <BorderPane.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </BorderPane.margin>
-      </VBox>
+          </TableView>
     </center>
 </BorderPane>
