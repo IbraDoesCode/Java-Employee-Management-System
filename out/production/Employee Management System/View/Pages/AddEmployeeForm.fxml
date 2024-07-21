@@ -82,7 +82,7 @@
                   </Label>
                   <Line endX="127.39997863769531" endY="7.62939453125E-6" layoutX="111.0" layoutY="80.0" startX="-100.0" strokeWidth="2.0" GridPane.rowIndex="8" />
                   <Label layoutX="10.0" layoutY="332.0" text="Employee ID" GridPane.rowIndex="9" />
-                  <TextField fx:id="employeeIDTextField" layoutX="252.0" layoutY="628.0" style="-fx-background-color: transparent; -fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <TextField fx:id="employeeIDTextField" editable="false" layoutX="252.0" layoutY="628.0" style="-fx-background-color: transparent; -fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                   <Label layoutX="10.0" layoutY="417.0" text="Hire Date" GridPane.rowIndex="10" />
                   <DatePicker fx:id="hireDatePicker" layoutX="252.0" layoutY="193.0" prefHeight="27.0" prefWidth="175.0" style="-fx-background-color: transparent; -fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                   <Label layoutX="10.0" layoutY="426.0" text="Department" GridPane.rowIndex="11" />
@@ -119,7 +119,7 @@
                   <Label text="Clothing Allowance" GridPane.rowIndex="28" />
                   <Label text="Phone Allowance" GridPane.rowIndex="29" />
                   <TextField fx:id="phoneTextField" style="-fx-background-color: transparent; -fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="29" />
-                  <Button fx:id="saveButton" minHeight="26.0" minWidth="50.0" mnemonicParsing="false" text="Save" onAction="#onSaveNewEmployeeRecord" GridPane.columnIndex="1" GridPane.rowIndex="30">
+                  <Button fx:id="saveButton" minHeight="26.0" minWidth="50.0" mnemonicParsing="false" onAction="#onSaveNewEmployeeRecord" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="30">
                      <GridPane.margin>
                         <Insets left="265.0" />
                      </GridPane.margin>
