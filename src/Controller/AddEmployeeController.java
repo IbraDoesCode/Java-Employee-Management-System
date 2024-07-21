@@ -22,70 +22,34 @@ import java.time.format.DateTimeFormatter;
 
 public class AddEmployeeController {
 
-    private EmployeeDataService empDataService;
+    private final EmployeeDataService empDataService;
+
     private ObservableList<Employee> employeeList;
 
-    // Personal Details Components
-    @FXML
-    private TextField firstNameTextField;
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+
+    private static final String[] DEPARTMENTS = {"Human Resources", "Payroll", "Information Technology","Accounting", "Corporate", "Customer Service", "Logistics", "Sales"};
+
+    private static final String[] STATUSES = {"Regular", "Part-time", "Probationary", "Intern", "Resigned"};
 
     @FXML
-    private TextField lastNameTextField;
+    private TextField firstNameTextField, lastNameTextField, phoneNoTextField, addressTextField;
 
     @FXML
-    private DatePicker dobDatePicker;
+    private TextField employeeIDTextField, positionTextField, supervisorTextField;
 
     @FXML
-    private TextField phoneNoTextField;
+    private TextField tinNoTextField, sssNoTextField, philhealthNoTextField, pagibigNoTextField;
 
     @FXML
-    private TextField addressTextField;
-
-    // Employment Components
-    @FXML
-    private TextField employeeIDTextField;
+    private TextField basicSalaryTextField, riceTextField, clothingTextField, phoneTextField;
 
     @FXML
-    private DatePicker hireDatePicker;
+    private DatePicker dobDatePicker, hireDatePicker;
 
     @FXML
-    private ComboBox<String> departmentComboBox;
+    private ComboBox<String> departmentComboBox, statusComboBox;
 
-    @FXML
-    private TextField positionTextField;
-
-    @FXML
-    private TextField supervisorTextField;
-
-    @FXML
-    private ComboBox<String> statusComboBox;
-
-    // Social ID's components
-
-    @FXML
-    private TextField tinNoTextField;
-
-    @FXML
-    private TextField sssNoTextField;
-
-    @FXML
-    private TextField philhealthNoTextField;
-
-    @FXML
-    private TextField pagibigNoTextField;
-
-    // Salary details components
-    @FXML
-    private TextField basicSalaryTextField;
-
-    @FXML
-    private TextField riceTextField;
-
-    @FXML
-    private TextField clothingTextField;
-
-    @FXML
-    private TextField phoneTextField;
 
     public AddEmployeeController() {
         empDataService = new EmployeeDataService();
@@ -103,11 +67,9 @@ public class AddEmployeeController {
 
     private void initializeComboBox() {
 
-        String[] departments = {"Human Resources", "Payroll", "Information Technology", "Accounting", "Corporate", "Customer Service", "Logistics", "Sales"};
-        departmentComboBox.setItems(FXCollections.observableArrayList(departments));
+        departmentComboBox.setItems(FXCollections.observableArrayList(DEPARTMENTS));
 
-        String[] status = {"Regular", "Part-time", "Probationary", "Intern", "Resigned", "On leave"};
-        statusComboBox.setItems(FXCollections.observableArrayList(status));
+        statusComboBox.setItems(FXCollections.observableArrayList(STATUSES));
     }
 
     public void showAddNewEmployeeStage() {
@@ -136,21 +98,10 @@ public class AddEmployeeController {
 
     private boolean isTextFieldsComplete() {
         TextField[] textFields = {
-                lastNameTextField,
-                firstNameTextField,
-                phoneNoTextField,
-                addressTextField,
-                employeeIDTextField,
-                positionTextField,
-                supervisorTextField,
-                tinNoTextField,
-                sssNoTextField,
-                philhealthNoTextField,
-                pagibigNoTextField,
-                basicSalaryTextField,
-                riceTextField,
-                clothingTextField,
-                phoneTextField
+                lastNameTextField, firstNameTextField, phoneNoTextField, addressTextField,
+                employeeIDTextField, positionTextField, supervisorTextField,
+                tinNoTextField, sssNoTextField, philhealthNoTextField, pagibigNoTextField,
+                basicSalaryTextField, riceTextField, clothingTextField, phoneTextField
         };
 
         for (TextField textField : textFields) {
@@ -162,7 +113,7 @@ public class AddEmployeeController {
     }
 
     private String formatDateToString(LocalDate localDate) {
-        return localDate.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+        return localDate.format(DATE_FORMAT);
     }
 
     private String[] retrieveInputAsStringArray() {
@@ -173,27 +124,13 @@ public class AddEmployeeController {
         double hourlyRate = (basicSalary / 21) / 8;
 
         return new String[]{
-                employeeIDTextField.getText(),
-                lastNameTextField.getText(),
-                firstNameTextField.getText(),
-                formatDateToString(dobDatePicker.getValue()),
-                addressTextField.getText(),
-                phoneNoTextField.getText(),
+                employeeIDTextField.getText(), lastNameTextField.getText(), firstNameTextField.getText(),
+                formatDateToString(dobDatePicker.getValue()), addressTextField.getText(), phoneNoTextField.getText(),
                 formatDateToString(hireDatePicker.getValue()),
-                sssNoTextField.getText(),
-                philhealthNoTextField.getText(),
-                tinNoTextField.getText(),
-                pagibigNoTextField.getText(),
-                statusComboBox.getValue(),
-                positionTextField.getText(),
-                departmentComboBox.getValue(),
-                supervisorTextField.getText(),
-                basicSalaryTextField.getText(),
-                riceTextField.getText(),
-                phoneTextField.getText(),
-                clothingTextField.getText(),
-                String.format("%.2f", semiMonthlyRate),
-                String.format("%.2f", hourlyRate)
+                sssNoTextField.getText(), philhealthNoTextField.getText(), tinNoTextField.getText(), pagibigNoTextField.getText(),
+                statusComboBox.getValue(), positionTextField.getText(), departmentComboBox.getValue(), supervisorTextField.getText(),
+                basicSalaryTextField.getText(), riceTextField.getText(), phoneTextField.getText(), clothingTextField.getText(),
+                String.format("%.2f", semiMonthlyRate), String.format("%.2f", hourlyRate)
         };
 
     }

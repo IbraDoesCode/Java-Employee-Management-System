@@ -19,10 +19,7 @@ public class LoginController {
     private final AuthenticationService authService;
 
     @FXML
-    private TextField usernameTextField;
-
-    @FXML
-    private PasswordField passwordField;
+    private TextField usernameTextField, passwordField;
 
     public LoginController() {
         this.authService = new AuthenticationService();

@@ -21,8 +21,9 @@ import java.util.List;
 
 public class MainInterfaceController {
 
-    private EmployeeDataService empDataService;
-    private ObservableList<Employee> employeeObservableList;
+    private final EmployeeDataService empDataService;
+
+    private final ObservableList<Employee> employeeObservableList;
 
     @FXML
     private TableView<Employee> employeeTable;
@@ -31,22 +32,7 @@ public class MainInterfaceController {
     private TableColumn<Employee, Integer> employeeIdColumn;
 
     @FXML
-    private TableColumn<Employee, String> firstNameColumn;
-
-    @FXML
-    private TableColumn<Employee, String> lastNameColumn;
-
-    @FXML
-    private TableColumn<Employee, String> tinNoColumn;
-
-    @FXML
-    private TableColumn<Employee, String> sssNoColumn;
-
-    @FXML
-    private TableColumn<Employee, String> philhealthNoColumn;
-
-    @FXML
-    private TableColumn<Employee, String> pagibigNoColumn;
+    private TableColumn<Employee, String> firstNameColumn, lastNameColumn, tinNoColumn, sssNoColumn, philhealthNoColumn, pagibigNoColumn;
 
     public MainInterfaceController() {
         empDataService = new EmployeeDataService();
@@ -117,7 +103,7 @@ public class MainInterfaceController {
     public void handleDeleteRecord() {
 
         if (selectedEmployee() == null) {
-            AlertUtil.showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee to terminate.");
+            AlertUtil.showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee record to delete.");
             return;
         }
 
