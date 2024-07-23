@@ -9,6 +9,7 @@ import java.util.List;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
+import com.opencsv.exceptions.CsvValidationException;
 
 public class CsvHandler {
 
@@ -20,12 +21,10 @@ public class CsvHandler {
 
     /**
      * retrieves data from csv
-     *
+     * @param skipHeader boolean value to skip first column i.e. header
      * @return a list of string array, where each array represents a row in the csv file
-     * @throws IOException  if an I/O error occurs
-     * @throws CsvException if a CSV parsing errors occurs
      **/
-    public List<String[]> retrieveCsvData(boolean skipHeader) throws IOException {
+    public List<String[]> retrieveCsvData(boolean skipHeader)  {
         List<String[]> data = new ArrayList<>();
         try (CSVReader csvReader = new CSVReader(new FileReader(Paths.get(filepath).toFile()))) {
             String[] row;
@@ -34,9 +33,9 @@ public class CsvHandler {
                 data.add(row);
             }
         } catch (FileNotFoundException e) {
-            throw new IOException("File not found " + filepath, e);
+            System.out.println("Unable to locate the specified file: " + e.getMessage());
         } catch (IOException | CsvException e) {
-            throw new IOException("Error reading CSV file " + filepath, e);
+            System.out.println("Error retrieving csv date: " + e.getMessage());
         }
 
         if (skipHeader) {
@@ -49,16 +48,16 @@ public class CsvHandler {
     /**
      * @param data    list of string array to write to the csv file
      * @param headers the headers for the csv file
-     * @throws IOException  if I/O error occurs
-     * @throws CsvException if a CSV writing error occurs
      */
 
-    public void writeDataToCsv(List<String[]> data, String[] headers) throws IOException, CsvException {
+    public void writeDataToCsv(List<String[]> data, String[] headers) {
         try (CSVWriter csvWriter = new CSVWriter(new FileWriter(Paths.get(filepath).toFile()))) {
             csvWriter.writeNext(headers);
             csvWriter.writeAll(data);
-        } catch (Exception e) {
-            throw new IOException("Error writing to CSV file: " + filepath, e);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to locate the specified file: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
         }
     }
 
@@ -71,12 +70,13 @@ public class CsvHandler {
         return file.exists();
     }
 
-    public String[] retrieveFieldNames() throws IOException, CsvException {
+    public String[] retrieveFieldNames() {
         try (CSVReader csvReader = new CSVReader(new FileReader(Paths.get(filepath).toFile()))) {
             return csvReader.readNext();
-        } catch (IOException | CsvException e) {
-            throw new IOException("Error retrieving field names from CSV file: " + filepath, e);
+        } catch (CsvValidationException | IOException e) {
+           throw new RuntimeException("Unable to retrieve file headers: " + e);
         }
+
     }
 
 }

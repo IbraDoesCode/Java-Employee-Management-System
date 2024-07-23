@@ -10,21 +10,20 @@ import java.util.List;
 
 public class UserCredentialService {
 
-    private CsvHandler csvHandler;
-    private String userCredentialFile = "Data/userCredentials.csv";
-    List<String[]> userCredentialData;
+    private final CsvHandler csvHandler;
+
+    private final String USER_CREDENTIAL_FILE = "Data/userCredentials.csv";
+
+    private final List<String[]> userCredentialData;
 
     public UserCredentialService() {
-        this.csvHandler = new CsvHandler(userCredentialFile);
+        this.csvHandler = new CsvHandler(USER_CREDENTIAL_FILE);
 
-        try {
-            userCredentialData = csvHandler.retrieveCsvData(true);
-        } catch (IOException e) {
-            throw new RuntimeException("An error has occurred while initializing user credential data", e);
-        }
+        userCredentialData = csvHandler.retrieveCsvData(true);
+
     }
 
-    private List<User> retrieveListOfUserObject() throws IOException, CsvException {
+    private List<User> retrieveListOfUserObject() {
         List<User> userCredentials = new ArrayList<>();
 
         for (String[] row : userCredentialData) {
@@ -33,7 +32,7 @@ public class UserCredentialService {
         return userCredentials;
     }
 
-    public User retrieveUserCredentialByUsername(String username) throws IOException, CsvException {
+    public User retrieveUserCredentialByUsername(String username)  {
         for (User user : retrieveListOfUserObject()) {
             if (user.getUsername().equals(username)) {
                 return user;

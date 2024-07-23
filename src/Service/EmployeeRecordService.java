@@ -14,25 +14,21 @@ import java.util.List;
 public class EmployeeRecordService {
 
     private final CsvHandler csvHandler;
+
     private final String EMPLOYEE_DATA_FILE = "Data/employeeData.csv";
+
     private final List<String[]> employeeData;
+
+    private final String[] HEADERS;
 
     public EmployeeRecordService() {
         this.csvHandler = new CsvHandler(EMPLOYEE_DATA_FILE);
-
-        try {
-            employeeData = csvHandler.retrieveCsvData(true);
-        } catch (IOException e) {
-            throw new RuntimeException("Error initializing employee data", e);
-        }
+        employeeData = csvHandler.retrieveCsvData(true);
+        HEADERS = csvHandler.retrieveFieldNames();
 
     }
 
-    private String[] retrieveFileHeaders() throws IOException, CsvException {
-        return csvHandler.retrieveFieldNames();
-    }
-
-    private boolean recordExists(String[] record) throws IOException, CsvException {
+    private boolean recordExists(String[] record) {
         for (String[] row : employeeData) {
             if (Arrays.equals(row, record)) {
                 return true;
@@ -41,7 +37,7 @@ public class EmployeeRecordService {
         return false;
     }
 
-    public void addEmployeeRecord(String[] record) throws IOException, CsvException {
+    public void addEmployeeRecord(String[] record) {
         if (recordExists(record)) {
             AlertUtil.showAlert(Alert.AlertType.ERROR,
                     "Employee Record Exists",
@@ -51,11 +47,11 @@ public class EmployeeRecordService {
 
         employeeData.add(record);
 
-        csvHandler.writeDataToCsv(employeeData, retrieveFileHeaders());
+        csvHandler.writeDataToCsv(employeeData, HEADERS);
         System.out.println("Record saved");
     }
 
-    public List<Employee> retrieveListOfEmployeeObject() throws IOException, CsvException {
+    public List<Employee> retrieveListOfEmployeeObject() {
         List<Employee> employees = new ArrayList<>();
 
         for (String[] row : employeeData) {
@@ -113,21 +109,17 @@ public class EmployeeRecordService {
     }
 
     public int getNewEmployeeID() {
-        try {
-            int last_id = 34;
-            for (Employee employee : retrieveListOfEmployeeObject()) {
-                if (employee.getEmployeeID() > last_id) {
-                    last_id = employee.getEmployeeID();
-                }
-            }
-            return last_id + 1;
 
-        } catch (IOException | CsvException e) {
-            throw new RuntimeException("Error retrieving new employee ID", e);
+        int last_id = 34;
+        for (Employee employee : retrieveListOfEmployeeObject()) {
+            if (employee.getEmployeeID() > last_id) {
+                last_id = employee.getEmployeeID();
+            }
         }
+        return last_id + 1;
     }
 
-    public void updateEmployeeRecord(String[] record) throws IOException, CsvException {
+    public void updateEmployeeRecord(String[] record) {
 
         for (int i = 0; i < employeeData.size(); i++) {
             String[] row = employeeData.get(i);
@@ -136,11 +128,10 @@ public class EmployeeRecordService {
                 break;
             }
         }
-
-        csvHandler.writeDataToCsv(employeeData, retrieveFileHeaders());
+        csvHandler.writeDataToCsv(employeeData, HEADERS);
     }
 
-    public void deleteEmployeeRecord(int employeeId) throws IOException, CsvException {
+    public void deleteEmployeeRecord(int employeeId) {
         List<String[]> updatedEmployeesRecord = new ArrayList<>();
 
         for (String[] row : employeeData) {
@@ -152,7 +143,7 @@ public class EmployeeRecordService {
         employeeData.clear();
         employeeData.addAll(updatedEmployeesRecord);
 
-        csvHandler.writeDataToCsv(updatedEmployeesRecord, retrieveFileHeaders());
+        csvHandler.writeDataToCsv(updatedEmployeesRecord, HEADERS);
         System.out.println("Record deleted");
     }
 }
