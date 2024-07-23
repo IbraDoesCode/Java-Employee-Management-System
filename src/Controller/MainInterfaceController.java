@@ -2,7 +2,7 @@ package Controller;
 
 import Model.Employee;
 import Service.EmployeeRecordService;
-import Service.EmployeeTableService;
+import Service.ObservableListService;
 import Util.AlertUtil;
 import com.opencsv.exceptions.CsvException;
 import javafx.collections.FXCollections;
@@ -15,6 +15,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,8 +25,10 @@ import java.util.List;
 public class MainInterfaceController {
 
     private final EmployeeRecordService empDataService;
-    private final EmployeeTableService employeeTableService;
+
     private final ObservableList<Employee> employeeObservableList;
+
+    private final ObservableListService observableListService;
 
     @FXML
     private TableView<Employee> employeeTable;
@@ -38,7 +42,7 @@ public class MainInterfaceController {
     public MainInterfaceController() {
         empDataService = new EmployeeRecordService();
         employeeObservableList = FXCollections.observableArrayList();
-        employeeTableService = new EmployeeTableService(employeeObservableList);
+        observableListService = new ObservableListService(employeeObservableList);
     }
 
     @FXML
@@ -46,6 +50,7 @@ public class MainInterfaceController {
         initializeTableColumns();
         refreshEmployeeData();
         setDataToEmployeeTable();
+
     }
 
     public void initializeMainUI() throws IOException {
@@ -59,14 +64,14 @@ public class MainInterfaceController {
 
     @FXML
     private void handleAddNewRecord() {
-        showEmployeeForm(false, null);
+        new EmployeeFormController().showEmployeeForm(false, null, observableListService);
     }
 
     @FXML
     private void handleUpdateRecord() {
         Employee selectedEmployee = selectedEmployee();
         if (selectedEmployee != null) {
-            showEmployeeForm(true, selectedEmployee);
+            new EmployeeFormController().showEmployeeForm(true, selectedEmployee, observableListService);
         } else {
             AlertUtil.showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an employee to update.");
         }
@@ -82,18 +87,38 @@ public class MainInterfaceController {
 
         boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Deletion", "Are you sure you want to delete this employee record? This action cannot be undone.");
         if (confirmed) {
-            try {
-                empDataService.deleteEmployeeRecord(selectedEmployee.getEmployeeID());
-                employeeTableService.removeEmployee(selectedEmployee);
-                AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Record Deletion", "Record deleted successfully");
-                refreshEmployeeData();
-            } catch (IOException | CsvException e) {
-                AlertUtil.showAlert(Alert.AlertType.ERROR, "Deletion Error", "An error occurred while deleting the record.");
-            }
+
+            empDataService.deleteEmployeeRecord(selectedEmployee.getEmployeeID());
+            observableListService.removeEmployee(selectedEmployee);
+            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Record Deletion", "Record deleted successfully");
+            refreshEmployeeData();
+
         }
     }
 
+    @FXML
+    public void handleLogout() {
+        try {
+
+            boolean confirmed = AlertUtil.showConfirmationAlert(
+                    "Confirm Logout",
+                    "Are you sure you want to log out?");
+            if (confirmed) {
+                new LoginController().showLoginStage();
+                closeStage();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void closeStage() {
+        Stage mainUI = (Stage) employeeTable.getScene().getWindow();
+        mainUI.close();
+    }
+
     private void initializeTableColumns() {
+
         employeeIdColumn.setCellValueFactory(new PropertyValueFactory<>("employeeID"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
@@ -113,12 +138,9 @@ public class MainInterfaceController {
     }
 
     private void refreshEmployeeData() {
-        try {
-            List<Employee> employeeList = empDataService.retrieveListOfEmployeeObject();
-            employeeObservableList.setAll(employeeList);
-        } catch (IOException | CsvException e) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Data Error", "An error occurred while retrieving the employee data.");
-        }
+
+        List<Employee> employeeList = empDataService.retrieveListOfEmployeeObject();
+        employeeObservableList.setAll(employeeList);
     }
 
     private void setDataToEmployeeTable() {
@@ -127,29 +149,6 @@ public class MainInterfaceController {
 
     private Employee selectedEmployee() {
         return employeeTable.getSelectionModel().getSelectedItem();
-    }
-
-    private void showEmployeeForm(boolean isUpdateMode, Employee employee) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/EmployeeForm.fxml"));
-            Parent root = loader.load();
-
-            EmployeeFormController employeeFormController = loader.getController();
-            employeeFormController.setEmployeeListService(employeeTableService);
-            employeeFormController.setUpdateMode(isUpdateMode);
-
-            if (isUpdateMode && employee != null) {
-                employeeFormController.setEmployee(employee);
-            }
-
-            Stage stage = new Stage();
-            stage.setTitle(isUpdateMode ? "Update Employee" : "Add New Employee");
-            stage.setScene(new Scene(root));
-            stage.setResizable(false);
-            stage.show();
-        } catch (IOException e) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Form Error", "An error occurred while loading the employee form.");
-        }
     }
 
 }
