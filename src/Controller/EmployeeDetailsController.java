@@ -2,7 +2,7 @@ package Controller;
 
 import Model.Employee;
 import Service.EmployeeRepository;
-import Service.ObservableListService;
+import Service.EmployeeListService;
 import Util.AlertUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -14,19 +14,16 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class EmployeeFormController {
+public class EmployeeDetailsController {
 
     private final EmployeeRepository empDataService;
-    private ObservableListService observableListService;
+    private EmployeeListService employeeListService;
     private Employee employee;
     private boolean updateMode = false;
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("M/d/yyyy");
     private static final String[] DEPARTMENTS = {"Human Resources", "Payroll", "Information Technology", "Accounting", "Corporate", "Customer Service", "Logistics", "Sales"};
     private static final String[] STATUSES = {"Regular", "Part-time", "Probationary", "Intern", "Resigned"};
-
-    @FXML
-    private DialogPane dialogPane;
 
     @FXML
     private TextField firstNameTextField, lastNameTextField, phoneNoTextField, addressTextField;
@@ -46,7 +43,7 @@ public class EmployeeFormController {
     @FXML
     private ComboBox<String> departmentComboBox, statusComboBox;
 
-    public EmployeeFormController() {
+    public EmployeeDetailsController() {
         empDataService = new EmployeeRepository();
     }
 
@@ -62,8 +59,8 @@ public class EmployeeFormController {
         }
     }
 
-    public void setEmployeeTableService(ObservableListService observableListService) {
-        this.observableListService = observableListService;
+    public void setEmployeeTableService(EmployeeListService employeeListService) {
+        this.employeeListService = employeeListService;
     }
 
     public void setEmployee(Employee employee) {
@@ -131,31 +128,24 @@ public class EmployeeFormController {
                 if (updateMode) {
                     handleUpdateMode(record);
                 } else {
-                    if (handleAddMode(record)) {
-                        return;
-                    }
+                    handleAddMode(record);
                 }
-                AlertUtil.showRecordSavedAlert();
+
             }
         } catch (NumberFormatException e) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Invalid Number Format", "Please enter a valid number.");
         }
     }
 
-    private boolean handleAddMode(String[] record) {
-        if (empDataService.recordExists(record)) {
-            AlertUtil.showDuplicateRecordExists();
-            return true;
-        }
+    private void handleAddMode(String[] record) {
         empDataService.addEmployeeRecord(record);
-        observableListService.addEmployee(empDataService.convertArrayToEmployee(record));
-        return false;
+        employeeListService.addEmployee(empDataService.convertArrayToEmployee(record));
     }
 
     private void handleUpdateMode(String[] record) {
         empDataService.updateEmployeeRecord(record);
         Employee updatedEmployee = empDataService.convertArrayToEmployee(record);
-        observableListService.updateEmployee(updatedEmployee);
+        employeeListService.updateEmployee(updatedEmployee);
     }
 
     private LocalDate convertStringToLocalDate(String dateString) {
@@ -189,18 +179,18 @@ public class EmployeeFormController {
         statusComboBox.setValue(employee.getStatus());
     }
 
-    public void showEmployeeForm(boolean isUpdateMode, Employee employee, ObservableListService empTableService) {
+    public void showEmployeeForm(boolean isUpdateMode, Employee employee, EmployeeListService empTableService) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/View/Pages/EmployeeForm.fxml"));
+            loader.setLocation(getClass().getResource("/View/Pages/EmployeeEditor.fxml"));
             DialogPane employeeDialog = loader.load();
 
 
-            EmployeeFormController employeeFormController = loader.getController();
-            employeeFormController.setEmployeeTableService(empTableService);
+            EmployeeDetailsController employeeDetailsController = loader.getController();
+            employeeDetailsController.setEmployeeTableService(empTableService);
 
             if (isUpdateMode && employee != null) {
-                employeeFormController.setEmployee(employee);
+                employeeDetailsController.setEmployee(employee);
             }
 
             Dialog<ButtonType> dialog = new Dialog<>();
@@ -209,7 +199,7 @@ public class EmployeeFormController {
 
             dialog.showAndWait().ifPresent(result -> {
                 if (result == ButtonType.OK) {
-                    employeeFormController.handleSaveRecord();
+                    employeeDetailsController.handleSaveRecord();
                 }
             });
 

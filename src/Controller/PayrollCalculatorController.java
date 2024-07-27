@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class PayrollFormController {
+public class PayrollCalculatorController {
 
     @FXML
     private TextField IdTextField, nameTextField;
@@ -51,10 +51,10 @@ public class PayrollFormController {
     }
 
     public void showPayrollForm(Employee employee) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/PayrollForm.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/PayrollCalculator.fxml"));
         Parent root = loader.load();
 
-        PayrollFormController controller = loader.getController();
+        PayrollCalculatorController controller = loader.getController();
         controller.setEmployee(employee);
 
         Stage stage = new Stage();

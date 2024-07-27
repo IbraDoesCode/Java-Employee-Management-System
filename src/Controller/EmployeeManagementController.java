@@ -2,7 +2,7 @@ package Controller;
 
 import Model.Employee;
 import Service.EmployeeRepository;
-import Service.ObservableListService;
+import Service.EmployeeListService;
 import Util.AlertUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,13 +18,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 
-public class MainInterfaceController {
+public class EmployeeManagementController {
 
     private final EmployeeRepository empDataService;
 
     private final ObservableList<Employee> employeeObservableList;
 
-    private final ObservableListService observableListService;
+    private final EmployeeListService employeeListService;
 
     @FXML
     private TableView<Employee> employeeTable;
@@ -35,10 +35,10 @@ public class MainInterfaceController {
     @FXML
     private TableColumn<Employee, String> firstNameColumn, lastNameColumn, tinNoColumn, sssNoColumn, philhealthNoColumn, pagibigNoColumn;
 
-    public MainInterfaceController() {
+    public EmployeeManagementController() {
         empDataService = new EmployeeRepository();
         employeeObservableList = FXCollections.observableArrayList();
-        observableListService = new ObservableListService(employeeObservableList);
+        employeeListService = new EmployeeListService(employeeObservableList);
     }
 
     @FXML
@@ -50,7 +50,7 @@ public class MainInterfaceController {
     }
 
     public void initializeMainUI() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/MainInterface.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/EmployeeManagement.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("MotorPH HR System");
@@ -60,14 +60,14 @@ public class MainInterfaceController {
 
     @FXML
     private void handleAddNewRecord() {
-        new EmployeeFormController().showEmployeeForm(false, null, observableListService);
+        new EmployeeDetailsController().showEmployeeForm(false, null, employeeListService);
     }
 
     @FXML
     private void handleUpdateRecord() {
         Employee selectedEmployee = selectedEmployee();
         if (selectedEmployee != null) {
-            new EmployeeFormController().showEmployeeForm(true, selectedEmployee, observableListService);
+            new EmployeeDetailsController().showEmployeeForm(true, selectedEmployee, employeeListService);
         } else {
             AlertUtil.showNoSelectionAlert("Please select an employee record to update");
         }
@@ -85,8 +85,7 @@ public class MainInterfaceController {
         if (confirmed) {
 
             empDataService.deleteEmployeeRecord(selectedEmployee.getEmployeeID());
-            observableListService.removeEmployee(selectedEmployee);
-            AlertUtil.showRecordDeletedAlert();
+            employeeListService.removeEmployee(selectedEmployee);
             refreshEmployeeData();
 
         }
@@ -101,7 +100,7 @@ public class MainInterfaceController {
         }
 
         try {
-            new PayrollFormController().showPayrollForm(selectedEmployee());
+            new PayrollCalculatorController().showPayrollForm(selectedEmployee());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

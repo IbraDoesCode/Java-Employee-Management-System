@@ -62,7 +62,7 @@ public class LoginController {
             AlertUtil.showAlert(Alert.AlertType.INFORMATION,
                     "Login Successful",
                     "You have successfully logged in!");
-            new MainInterfaceController().initializeMainUI();
+            new EmployeeManagementController().initializeMainUI();
             closeStage();
 
         } catch (IOException | CsvException e) {
