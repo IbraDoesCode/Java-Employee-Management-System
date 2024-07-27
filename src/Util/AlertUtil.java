@@ -7,21 +7,57 @@ import java.util.Optional;
 
 public class AlertUtil {
 
+
     public static void showAlert(Alert.AlertType type, String title, String message) {
+        showAlert(type, title, message, null);
+    }
+
+    public static boolean showConfirmationAlert(String title, String message) {
+        return showAlert(Alert.AlertType.CONFIRMATION, title, message, ButtonType.OK) == ButtonType.OK;
+    }
+
+    public static void showRecordSavedAlert() {
+        showAlert(Alert.AlertType.INFORMATION, "Record Saved", "The employee record has been saved successfully.");
+    }
+
+    public static void showRecordUpdatedAlert() {
+        showAlert(Alert.AlertType.INFORMATION, "Record updated", "The employee record has been updated successfully.");
+    }
+
+    public static void showDuplicateRecordExists() {
+        showAlert(Alert.AlertType.ERROR, "Employee Record Exists", "An employee record with the same details already exists. Please verify the information and try again.");
+    }
+
+    public static void showIncompleteDataAlert() {
+        showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please ensure all required fields are filled out.");
+    }
+
+    public static boolean confirmDetails() {
+        return showConfirmationAlert("Confirm Details", "Please confirm that all the details are correct before saving.");
+    }
+
+    public static void showNoSelectionAlert(String message) {
+        showAlert(Alert.AlertType.WARNING, "No Employee Selected", message);
+    }
+
+    public static void showRecordDeletedAlert(){
+        showAlert(Alert.AlertType.INFORMATION, "Record Deletion", "Record deleted successfully");
+    }
+
+
+    private static ButtonType showAlert(Alert.AlertType type, String title, String message, ButtonType defaultButtonType) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.setHeaderText(null);
-        alert.showAndWait();
-    }
 
-    public static boolean showConfirmationAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
+        if (defaultButtonType != null) {
+            alert.getButtonTypes().setAll(defaultButtonType, ButtonType.CANCEL);
+        } else {
+            alert.getButtonTypes().setAll(ButtonType.OK);
+        }
 
         Optional<ButtonType> result = alert.showAndWait();
-        return result.isPresent() && result.get() == ButtonType.OK;
+        return result.orElse(null);
     }
 }
