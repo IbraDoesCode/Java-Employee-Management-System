@@ -7,14 +7,14 @@ import java.io.IOException;
 
 public class AuthenticationService {
 
-    private final UserCredentialService userCredentialService;
+    private final UserCredentialRepository userCredentialRepository;
 
     public AuthenticationService () {
-        this.userCredentialService = new UserCredentialService();
+        this.userCredentialRepository = new UserCredentialRepository();
     }
 
     public boolean authenticate(String username, String password) throws IOException, CsvException {
-        User user = userCredentialService.retrieveUserCredentialByUsername(username);
+        User user = userCredentialRepository.retrieveUserCredentialByUsername(username);
         return user != null && user.isValidCredentials(username, password);
     }
 }

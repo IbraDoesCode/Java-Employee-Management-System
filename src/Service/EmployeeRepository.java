@@ -1,12 +1,13 @@
 package Service;
 
 import Model.Employee;
+import Util.AlertUtil;
 import Util.CsvHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeRecordService {
+public class EmployeeRepository {
 
     private final CsvHandler csvHandler;
 
@@ -16,7 +17,7 @@ public class EmployeeRecordService {
 
     private final String[] HEADERS;
 
-    public EmployeeRecordService() {
+    public EmployeeRepository() {
         this.csvHandler = new CsvHandler(EMPLOYEE_DATA_FILE);
         employeeData = csvHandler.retrieveCsvData(true);
         HEADERS = csvHandler.retrieveFieldNames();
@@ -26,15 +27,12 @@ public class EmployeeRecordService {
     public boolean recordExists(String[] record) {
         for (String[] row : employeeData) {
 
-            String address = row[4];
-            String phoneNum = row[5];
-            String sss = row [7];
-            String philhealth = row[8];
-            String tin = row[9];
-            String pagibig = row[10];
-
-            if (record[4].equals(address) || record[5].equals(phoneNum) || record[7].equals(sss) ||
-                    record[8].equals(philhealth) || record[9].equals(tin) || record[10].equals(pagibig)) {
+            if (record[4].equals(row[4]) || // address
+                record[5].equals(row[5]) || // phone number
+                record[7].equals(row[7]) || // SSS
+                record[8].equals(row[8]) || // PhilHealth
+                record[9].equals(row[9]) || // TIN
+                record[10].equals(row[10])) { // Pag-IBIG
                 return true;
             }
 
@@ -45,13 +43,14 @@ public class EmployeeRecordService {
     public void addEmployeeRecord(String[] record) {
 
         if (recordExists(record)) {
-            System.out.println("Record Already Exits");
+            AlertUtil.showDuplicateRecordExists();
             return;
         }
 
         employeeData.add(record);
 
         csvHandler.writeDataToCsv(employeeData, HEADERS);
+        AlertUtil.showRecordSavedAlert();
         System.out.println("Record saved");
     }
 
@@ -96,6 +95,11 @@ public class EmployeeRecordService {
 
     public void updateEmployeeRecord(String[] record) {
 
+        if (recordExists(record)) {
+            AlertUtil.showDuplicateRecordExists();
+            return;
+        }
+
         for (int i = 0; i < employeeData.size(); i++) {
             String[] row = employeeData.get(i);
             if (row[0].equals(record[0])) {
@@ -104,6 +108,8 @@ public class EmployeeRecordService {
             }
         }
         csvHandler.writeDataToCsv(employeeData, HEADERS);
+        AlertUtil.showRecordUpdatedAlert();
+        System.out.println("Record Updated");
     }
 
     public void deleteEmployeeRecord(int employeeId) {
@@ -119,6 +125,7 @@ public class EmployeeRecordService {
         employeeData.addAll(updatedEmployeesRecord);
 
         csvHandler.writeDataToCsv(updatedEmployeesRecord, HEADERS);
+        AlertUtil.showRecordDeletedAlert();
         System.out.println("Record deleted");
     }
 }

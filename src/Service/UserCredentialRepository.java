@@ -5,7 +5,7 @@ import Model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserCredentialService {
+public class UserCredentialRepository {
 
     private final CsvHandler csvHandler;
 
@@ -13,7 +13,7 @@ public class UserCredentialService {
 
     private final List<String[]> userCredentialData;
 
-    public UserCredentialService() {
+    public UserCredentialRepository() {
         this.csvHandler = new CsvHandler(USER_CREDENTIAL_FILE);
 
         userCredentialData = csvHandler.retrieveCsvData(true);

@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 public class PayrollService {
 
-    private static final double PHILHEALTH_RATE = 0.05 * 0.5;
+    private static final double PHILHEALTH_RATE = 0.025;
 
     private static final double PAGIBIG_RATE_BELOW_1500 = 0.01;
 
@@ -15,7 +15,7 @@ public class PayrollService {
 
     private static final double PAGIBIG_MAX_CONTRIBUTION = 200;
 
-    private static final double OVERTIME_RATE = 2.5;
+    private static final double OVERTIME_RATE = 0.25;
 
     private static final double[][] taxBrackets = {
             {20_832, 0, 0}, // No withholding tax for 20,832 and below
@@ -64,23 +64,25 @@ public class PayrollService {
     }
 
     private static TreeMap<Double, Double> initializeSssTable() {
-        TreeMap<Double, Double> sssTable = new TreeMap<>();
 
-        double base_contribution = 135;
-        double increment = 22.50;
-        int range = 44;
+       TreeMap<Double, Double> sssTable = new TreeMap<>();
 
-        for (int i = 0; i < range; i++) {
-            double compensationRange = 2750 + (i * 500);
-            double contribution = base_contribution + i * increment;
-            sssTable.put(compensationRange, contribution);
-        }
-        return sssTable;
+       int range = 45;
+       double baseContribution = 135;
+       double increment = 22.50;
+
+       for (int i = 0; i < range; i++) {
+           double contributionRange = 2750 + (i * 500);
+           double contributionAmount = baseContribution + (i * increment);
+           sssTable.put(contributionRange, contributionAmount);
+       }
+
+       return sssTable;
     }
 
     public double calculateSssContribution() {
         Map.Entry<Double, Double> entry = sssContributionTable.floorEntry(basicSalary());
-        return (entry != null) ? entry.getValue() : 1125.0;
+        return entry.getValue();
     }
 
     public double calculatePagIbigContribution() {
@@ -96,31 +98,34 @@ public class PayrollService {
         return riceSubsidy + clothingAllowance + phoneAllowance;
     }
 
-    public double calculatePartialDeductions() {
-        return calculateSssContribution() + calculatePhilhealthContribution() + calculatePagIbigContribution();
+    public double calculateGrossPay() {
+        return basicSalary() + calculateTotalAllowances();
+    }
+    
+    public double taxableIncome() {
+        return calculateGrossPay() - calculatePartialDeductions();
     }
 
     public double calculateWithholdingTax() {
-        double taxableIncome = basicSalary() - calculatePartialDeductions();
         for (double[] taxBracket : taxBrackets) {
-            if (taxableIncome <= taxBracket[0]) {
-                return taxBracket.length == 3 ? taxBracket[2] * (taxableIncome - taxBracket[1]) :
-                        taxBracket[3] + taxBracket[2] * (taxableIncome - taxBracket[1]);
+            if (taxableIncome() <= taxBracket[0]) {
+                return taxBracket.length == 3 ? taxBracket[2] * (taxableIncome() - taxBracket[1]) :
+                        taxBracket[3] + taxBracket[2] * (taxableIncome() - taxBracket[1]);
             }
         }
         return 0;
     }
 
+    public double calculatePartialDeductions() {
+        return calculateSssContribution() + calculatePhilhealthContribution() + calculatePagIbigContribution();
+    }
+
     public double calculateTotalDeductions() {
         return calculatePartialDeductions() + calculateWithholdingTax();
     }
-
-    public double calculateGrossPay() {
-        return basicSalary() + calculateTotalAllowances();
-    }
-
+    
     public double calculateNetPay() {
-        return calculateGrossPay() - calculateTotalDeductions();
+        return calculateGrossPay() - calculateTotalDeductions() + overTimePay();
     }
 
 }
