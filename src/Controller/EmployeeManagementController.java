@@ -1,22 +1,18 @@
 package Controller;
 
 import Model.Employee;
-import Service.EmployeeRecordService;
+import Service.EmployeeRepository;
 import Service.ObservableListService;
 import Util.AlertUtil;
-import com.opencsv.exceptions.CsvException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -24,7 +20,7 @@ import java.util.List;
 
 public class MainInterfaceController {
 
-    private final EmployeeRecordService empDataService;
+    private final EmployeeRepository empDataService;
 
     private final ObservableList<Employee> employeeObservableList;
 
@@ -40,7 +36,7 @@ public class MainInterfaceController {
     private TableColumn<Employee, String> firstNameColumn, lastNameColumn, tinNoColumn, sssNoColumn, philhealthNoColumn, pagibigNoColumn;
 
     public MainInterfaceController() {
-        empDataService = new EmployeeRecordService();
+        empDataService = new EmployeeRepository();
         employeeObservableList = FXCollections.observableArrayList();
         observableListService = new ObservableListService(employeeObservableList);
     }
@@ -73,7 +69,7 @@ public class MainInterfaceController {
         if (selectedEmployee != null) {
             new EmployeeFormController().showEmployeeForm(true, selectedEmployee, observableListService);
         } else {
-            AlertUtil.showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an employee to update.");
+            AlertUtil.showNoSelectionAlert("Please select an employee record to update");
         }
     }
 
@@ -81,7 +77,7 @@ public class MainInterfaceController {
     public void handleDeleteRecord() {
         Employee selectedEmployee = selectedEmployee();
         if (selectedEmployee == null) {
-            AlertUtil.showAlert(Alert.AlertType.WARNING, "No Employee Selected", "Please select an employee record to delete.");
+            AlertUtil.showNoSelectionAlert("Please select an employee record to delete");
             return;
         }
 
@@ -90,9 +86,24 @@ public class MainInterfaceController {
 
             empDataService.deleteEmployeeRecord(selectedEmployee.getEmployeeID());
             observableListService.removeEmployee(selectedEmployee);
-            AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Record Deletion", "Record deleted successfully");
+            AlertUtil.showRecordDeletedAlert();
             refreshEmployeeData();
 
+        }
+    }
+
+    @FXML
+    public void handleComputePayroll() {
+
+        if (selectedEmployee() == null) {
+            AlertUtil.showNoSelectionAlert("Please select an employee record to compute");
+            return;
+        }
+
+        try {
+            new PayrollFormController().showPayrollForm(selectedEmployee());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -139,7 +150,7 @@ public class MainInterfaceController {
 
     private void refreshEmployeeData() {
 
-        List<Employee> employeeList = empDataService.retrieveListOfEmployeeObject();
+        List<Employee> employeeList = empDataService.getAllEmployees();
         employeeObservableList.setAll(employeeList);
     }
 

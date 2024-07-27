@@ -2,9 +2,6 @@ package Service;
 
 import Util.CsvHandler;
 import Model.User;
-import com.opencsv.exceptions.CsvException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,14 +1,9 @@
 package Service;
 
 import Model.Employee;
-import Util.AlertUtil;
 import Util.CsvHandler;
-import com.opencsv.exceptions.CsvException;
-import javafx.scene.control.Alert;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EmployeeRecordService {
@@ -28,20 +23,29 @@ public class EmployeeRecordService {
 
     }
 
-    private boolean recordExists(String[] record) {
+    public boolean recordExists(String[] record) {
         for (String[] row : employeeData) {
-            if (Arrays.equals(row, record)) {
+
+            String address = row[4];
+            String phoneNum = row[5];
+            String sss = row [7];
+            String philhealth = row[8];
+            String tin = row[9];
+            String pagibig = row[10];
+
+            if (record[4].equals(address) || record[5].equals(phoneNum) || record[7].equals(sss) ||
+                    record[8].equals(philhealth) || record[9].equals(tin) || record[10].equals(pagibig)) {
                 return true;
             }
+
         }
         return false;
     }
 
     public void addEmployeeRecord(String[] record) {
+
         if (recordExists(record)) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR,
-                    "Employee Record Exists",
-                    "An employee record with the same details already exists. Please verify the information and try again.");
+            System.out.println("Record Already Exits");
             return;
         }
 
@@ -51,38 +55,16 @@ public class EmployeeRecordService {
         System.out.println("Record saved");
     }
 
-    public List<Employee> retrieveListOfEmployeeObject() {
+    public List<Employee> getAllEmployees() {
         List<Employee> employees = new ArrayList<>();
 
         for (String[] row : employeeData) {
-            employees.add(new Employee(
-                    Integer.parseInt(row[0]),
-                    row[1],
-                    row[2],
-                    row[3],
-                    row[4],
-                    row[5],
-                    row[6],
-                    row[7],
-                    row[8],
-                    row[9],
-                    row[10],
-                    row[11],
-                    row[12],
-                    row[13],
-                    row[14],
-                    Double.parseDouble(row[15]),
-                    Double.parseDouble(row[16]),
-                    Double.parseDouble(row[17]),
-                    Double.parseDouble(row[18]),
-                    Double.parseDouble(row[19]),
-                    Double.parseDouble(row[20])
-            ));
+            employees.add(convertArrayToEmployee(row));
         }
         return employees;
     }
 
-    public Employee createNewEmployeeFromArrayInput(String[] employeeData) {
+    public Employee convertArrayToEmployee(String[] employeeData) {
         return new Employee(
                 Integer.parseInt(employeeData[0]),
                 employeeData[1],
@@ -109,14 +91,7 @@ public class EmployeeRecordService {
     }
 
     public int getNewEmployeeID() {
-
-        int last_id = 34;
-        for (Employee employee : retrieveListOfEmployeeObject()) {
-            if (employee.getEmployeeID() > last_id) {
-                last_id = employee.getEmployeeID();
-            }
-        }
-        return last_id + 1;
+        return Integer.parseInt(employeeData.getLast()[0]) + 1;
     }
 
     public void updateEmployeeRecord(String[] record) {

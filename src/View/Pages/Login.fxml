@@ -7,19 +7,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" fillWidth="false" minHeight="800.0" minWidth="1200.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
-   <children>
-      <VBox alignment="CENTER" fillWidth="false" minHeight="300.0" minWidth="400.0" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 10px;" VBox.vgrow="NEVER">
-         <children>
-            <Label text="MotorPH">
-               <font>
-                  <Font name="Forte" size="36.0" />
-               </font>
-            </Label>
-            <TextField fx:id="usernameTextField" minHeight="30.0" minWidth="220.0" promptText="Username" />
-            <PasswordField fx:id="passwordField" minHeight="30.0" minWidth="220.0" promptText="Password" />
-            <Button minHeight="30.0" minWidth="220.0" onAction="#login" style="-fx-background-color: black;" text="Login" textFill="WHITE" />
-         </children>
-      </VBox>
-   </children>
+<VBox alignment="CENTER" fillWidth="false" minHeight="600.0" minWidth="900.0" style="-fx-background-color: lightgray;"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controller.LoginController">
+   <VBox alignment="CENTER" fillWidth="false" minHeight="300.0" minWidth="400.0" spacing="20.0"
+         style="-fx-background-color: white; -fx-background-radius: 10px;" VBox.vgrow="NEVER">
+      <Label text="MotorPH">
+         <font>
+            <Font name="Forte" size="36.0"/>
+         </font>
+      </Label>
+      <TextField fx:id="usernameTextField" minHeight="30.0" minWidth="220.0" promptText="Username"/>
+      <PasswordField fx:id="passwordField" minHeight="30.0" minWidth="220.0" promptText="Password"/>
+      <Button minHeight="30.0" minWidth="220.0" onAction="#login" style="-fx-background-color: black;" text="Login"
+              textFill="WHITE"/>
+   </VBox>
 </VBox>

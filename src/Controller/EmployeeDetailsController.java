@@ -1,20 +1,13 @@
 package Controller;
 
 import Model.Employee;
-import Service.EmployeeRecordService;
+import Service.EmployeeRepository;
 import Service.ObservableListService;
 import Util.AlertUtil;
-import com.opencsv.exceptions.CsvException;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,7 +16,7 @@ import java.time.format.DateTimeParseException;
 
 public class EmployeeFormController {
 
-    private final EmployeeRecordService empDataService;
+    private final EmployeeRepository empDataService;
     private ObservableListService observableListService;
     private Employee employee;
     private boolean updateMode = false;
@@ -33,20 +26,28 @@ public class EmployeeFormController {
     private static final String[] STATUSES = {"Regular", "Part-time", "Probationary", "Intern", "Resigned"};
 
     @FXML
+    private DialogPane dialogPane;
+
+    @FXML
     private TextField firstNameTextField, lastNameTextField, phoneNoTextField, addressTextField;
+
     @FXML
     private TextField employeeIDTextField, positionTextField, supervisorTextField;
+
     @FXML
     private TextField tinNoTextField, sssNoTextField, philhealthNoTextField, pagibigNoTextField;
+
     @FXML
     private TextField basicSalaryTextField, riceTextField, clothingTextField, phoneTextField;
+
     @FXML
     private DatePicker dobDatePicker, hireDatePicker;
+
     @FXML
     private ComboBox<String> departmentComboBox, statusComboBox;
 
     public EmployeeFormController() {
-        empDataService = new EmployeeRecordService();
+        empDataService = new EmployeeRepository();
     }
 
     @FXML
@@ -61,11 +62,9 @@ public class EmployeeFormController {
         }
     }
 
-
     public void setEmployeeTableService(ObservableListService observableListService) {
         this.observableListService = observableListService;
     }
-
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
@@ -93,6 +92,10 @@ public class EmployeeFormController {
         return true;
     }
 
+    public boolean validateFields() {
+        return areTextFieldsComplete() && isDatesInputValid();
+    }
+
     private String formatDateToString(LocalDate localDate) {
         return localDate.format(DATE_FORMAT);
     }
@@ -113,38 +116,46 @@ public class EmployeeFormController {
         };
     }
 
-    private void closeStage() {
-        Stage stage = (Stage) firstNameTextField.getScene().getWindow();
-        stage.close();
-    }
-
     @FXML
     public void handleSaveRecord() {
-        if (!areTextFieldsComplete() || !isDatesInputValid()) {
-            AlertUtil.showAlert(Alert.AlertType.WARNING, "Incomplete Data", "Please ensure all required fields are filled out.");
+
+        if (!(validateFields())) {
+            AlertUtil.showIncompleteDataAlert();
             return;
         }
 
         try {
-            boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Details", "Please confirm that all the details are correct before saving.");
-            if (confirmed) {
+            if (AlertUtil.confirmDetails()) {
                 String[] record = retrieveInputAsStringArray();
 
                 if (updateMode) {
-                    empDataService.updateEmployeeRecord(record);
-                    Employee updatedEmployee = empDataService.createNewEmployeeFromArrayInput(record);
-                    observableListService.updateEmployee(updatedEmployee);
+                    handleUpdateMode(record);
                 } else {
-                    empDataService.addEmployeeRecord(record);
-                    observableListService.addEmployee(empDataService.createNewEmployeeFromArrayInput(record));
+                    if (handleAddMode(record)) {
+                        return;
+                    }
                 }
-
-                AlertUtil.showAlert(Alert.AlertType.INFORMATION, "Record Saved", "The employee record has been saved successfully.");
-                closeStage();
+                AlertUtil.showRecordSavedAlert();
             }
         } catch (NumberFormatException e) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Invalid Number Format", "Please enter a valid number.");
         }
+    }
+
+    private boolean handleAddMode(String[] record) {
+        if (empDataService.recordExists(record)) {
+            AlertUtil.showDuplicateRecordExists();
+            return true;
+        }
+        empDataService.addEmployeeRecord(record);
+        observableListService.addEmployee(empDataService.convertArrayToEmployee(record));
+        return false;
+    }
+
+    private void handleUpdateMode(String[] record) {
+        empDataService.updateEmployeeRecord(record);
+        Employee updatedEmployee = empDataService.convertArrayToEmployee(record);
+        observableListService.updateEmployee(updatedEmployee);
     }
 
     private LocalDate convertStringToLocalDate(String dateString) {
@@ -179,10 +190,11 @@ public class EmployeeFormController {
     }
 
     public void showEmployeeForm(boolean isUpdateMode, Employee employee, ObservableListService empTableService) {
-
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/EmployeeForm.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/View/Pages/EmployeeForm.fxml"));
+            DialogPane employeeDialog = loader.load();
+
 
             EmployeeFormController employeeFormController = loader.getController();
             employeeFormController.setEmployeeTableService(empTableService);
@@ -191,14 +203,18 @@ public class EmployeeFormController {
                 employeeFormController.setEmployee(employee);
             }
 
-            Stage stage = new Stage();
-            stage.setTitle(isUpdateMode ? "Update Employee" : "Add New Employee");
-            stage.setScene(new Scene(root));
-            stage.setResizable(false);
-            stage.show();
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(employeeDialog);
+            dialog.setTitle(isUpdateMode ? "Edit Employee Details" : "Add New Employee");
+
+            dialog.showAndWait().ifPresent(result -> {
+                if (result == ButtonType.OK) {
+                    employeeFormController.handleSaveRecord();
+                }
+            });
 
         } catch (IOException e) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Form Error", "An error occurred while loading the employee form.");
+            e.printStackTrace();
         }
     }
 }
