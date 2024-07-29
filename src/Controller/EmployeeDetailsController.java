@@ -13,10 +13,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Optional;
 
 public class EmployeeDetailsController {
 
-    private final EmployeeRepository empDataService;
+    private final EmployeeRepository empDataService = new EmployeeRepository();
     private EmployeeListService employeeListService;
     private Employee employee;
     private boolean updateMode = false;
@@ -27,32 +28,27 @@ public class EmployeeDetailsController {
 
     @FXML
     private TextField firstNameTextField, lastNameTextField, phoneNoTextField, addressTextField;
-
     @FXML
     private TextField employeeIDTextField, positionTextField, supervisorTextField;
-
     @FXML
     private TextField tinNoTextField, sssNoTextField, philhealthNoTextField, pagibigNoTextField;
-
     @FXML
     private TextField basicSalaryTextField, riceTextField, clothingTextField, phoneTextField;
-
     @FXML
     private DatePicker dobDatePicker, hireDatePicker;
-
     @FXML
     private ComboBox<String> departmentComboBox, statusComboBox;
 
-    public EmployeeDetailsController() {
-        empDataService = new EmployeeRepository();
-    }
+    private TextField[] textFields;
 
     @FXML
     private void initialize() {
-
         departmentComboBox.setItems(FXCollections.observableArrayList(DEPARTMENTS));
-
         statusComboBox.setItems(FXCollections.observableArrayList(STATUSES));
+
+        textFields = new TextField[]{lastNameTextField, firstNameTextField, phoneNoTextField, addressTextField,
+                employeeIDTextField, positionTextField, supervisorTextField, tinNoTextField, sssNoTextField,
+                philhealthNoTextField, pagibigNoTextField, basicSalaryTextField, riceTextField, clothingTextField, phoneTextField};
 
         if (!updateMode) {
             employeeIDTextField.setText(String.valueOf(empDataService.getNewEmployeeID()));
@@ -74,13 +70,6 @@ public class EmployeeDetailsController {
     }
 
     private boolean areTextFieldsComplete() {
-        TextField[] textFields = {
-                lastNameTextField, firstNameTextField, phoneNoTextField, addressTextField,
-                employeeIDTextField, positionTextField, supervisorTextField,
-                tinNoTextField, sssNoTextField, philhealthNoTextField, pagibigNoTextField,
-                basicSalaryTextField, riceTextField, clothingTextField, phoneTextField
-        };
-
         for (TextField textField : textFields) {
             if (textField.getText().isEmpty()) {
                 return false;
@@ -115,8 +104,7 @@ public class EmployeeDetailsController {
 
     @FXML
     public void handleSaveRecord() {
-
-        if (!(validateFields())) {
+        if (!validateFields()) {
             AlertUtil.showIncompleteDataAlert();
             return;
         }
@@ -130,7 +118,6 @@ public class EmployeeDetailsController {
                 } else {
                     handleAddMode(record);
                 }
-
             }
         } catch (NumberFormatException e) {
             AlertUtil.showAlert(Alert.AlertType.ERROR, "Invalid Number Format", "Please enter a valid number.");
@@ -179,32 +166,42 @@ public class EmployeeDetailsController {
         statusComboBox.setValue(employee.getStatus());
     }
 
-    public void showEmployeeForm(boolean isUpdateMode, Employee employee, EmployeeListService empTableService) {
+    public void displayEmployeeDialog(boolean updateMode, Employee employee, EmployeeListService empListService, boolean showOnly) {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/View/Pages/EmployeeEditor.fxml"));
-            DialogPane employeeDialog = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/EmployeeDetails.fxml"));
+            DialogPane empDetailsDialogPane = loader.load();
 
+            EmployeeDetailsController controller = loader.getController();
+            controller.setEmployeeTableService(empListService);
 
-            EmployeeDetailsController employeeDetailsController = loader.getController();
-            employeeDetailsController.setEmployeeTableService(empTableService);
-
-            if (isUpdateMode && employee != null) {
-                employeeDetailsController.setEmployee(employee);
+            if (updateMode) {
+                controller.setEmployee(employee);
+            } else if (employee != null) {
+                controller.setEmployee(employee);
+                controller.disableTextFields();
             }
 
             Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setDialogPane(employeeDialog);
-            dialog.setTitle(isUpdateMode ? "Edit Employee Details" : "Add New Employee");
+            dialog.setDialogPane(empDetailsDialogPane);
 
-            dialog.showAndWait().ifPresent(result -> {
-                if (result == ButtonType.OK) {
-                    employeeDetailsController.handleSaveRecord();
-                }
-            });
+            if (showOnly) {
+                empDetailsDialogPane.lookupButton(ButtonType.OK).setVisible(false);
+                empDetailsDialogPane.lookupButton(ButtonType.CANCEL).setVisible(false);
+            }
+
+            Optional<ButtonType> clickedButton = dialog.showAndWait();
+            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK && !showOnly) {
+                controller.handleSaveRecord();
+            }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void disableTextFields() {
+        for (TextField textField : textFields) {
+            textField.setEditable(false);
         }
     }
 }

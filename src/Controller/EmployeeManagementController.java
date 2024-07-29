@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -46,10 +47,10 @@ public class EmployeeManagementController {
         initializeTableColumns();
         refreshEmployeeData();
         setDataToEmployeeTable();
-
+        handleViewEmployeeDetails();
     }
 
-    public void initializeMainUI() throws IOException {
+    public void showMainUI() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/EmployeeManagement.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
@@ -60,14 +61,14 @@ public class EmployeeManagementController {
 
     @FXML
     private void handleAddNewRecord() {
-        new EmployeeDetailsController().showEmployeeForm(false, null, employeeListService);
+        new EmployeeDetailsController().displayEmployeeDialog(false, null, employeeListService, false);
     }
 
     @FXML
     private void handleUpdateRecord() {
         Employee selectedEmployee = selectedEmployee();
         if (selectedEmployee != null) {
-            new EmployeeDetailsController().showEmployeeForm(true, selectedEmployee, employeeListService);
+            new EmployeeDetailsController().displayEmployeeDialog(true, selectedEmployee, employeeListService, false);
         } else {
             AlertUtil.showNoSelectionAlert("Please select an employee record to update");
         }
@@ -89,6 +90,14 @@ public class EmployeeManagementController {
             refreshEmployeeData();
 
         }
+    }
+
+    private void handleViewEmployeeDetails() {
+        employeeTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getClickCount() == 2) {
+                new EmployeeDetailsController().displayEmployeeDialog(false, selectedEmployee(), employeeListService, true);
+            }
+        });
     }
 
     @FXML
