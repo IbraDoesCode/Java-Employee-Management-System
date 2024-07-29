@@ -168,7 +168,7 @@ public class EmployeeDetailsController {
 
     public void displayEmployeeDialog(boolean updateMode, Employee employee, EmployeeListService empListService, boolean showOnly) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/EmployeeDetails.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeDetails.fxml"));
             DialogPane empDetailsDialogPane = loader.load();
 
             EmployeeDetailsController controller = loader.getController();

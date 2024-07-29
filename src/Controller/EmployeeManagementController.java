@@ -51,7 +51,7 @@ public class EmployeeManagementController {
     }
 
     public void showMainUI() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/EmployeeManagement.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeManagement.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("MotorPH HR System");

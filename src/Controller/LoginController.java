@@ -28,7 +28,7 @@ public class LoginController {
     }
 
     public void showLoginStage() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/Login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Login.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("MotorPH Login Portal");

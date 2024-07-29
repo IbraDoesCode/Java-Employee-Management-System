@@ -38,7 +38,7 @@ public class PayrollCalculatorController {
     }
 
     public void showPayrollForm(Employee employee) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Pages/PayrollCalculator.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/PayrollCalculator.fxml"));
         Parent root = loader.load();
 
         PayrollCalculatorController controller = loader.getController();
