@@ -24,25 +24,24 @@ public class EmployeeRepository {
 
     }
 
-    public boolean recordExists(String[] record) {
+    public boolean recordExists(String[] record, int currentEmpId) {
         for (String[] row : employeeData) {
-
-            if (record[4].equals(row[4]) || // address
+            if (Integer.parseInt(row[0]) != currentEmpId && // EmployeeID
+                (record[4].equals(row[4]) || // address
                 record[5].equals(row[5]) || // phone number
                 record[7].equals(row[7]) || // SSS
                 record[8].equals(row[8]) || // PhilHealth
                 record[9].equals(row[9]) || // TIN
-                record[10].equals(row[10])) { // Pag-IBIG
+                record[10].equals(row[10]))) { // Pag-IBIG
                 return true;
             }
-
         }
         return false;
     }
 
     public void addEmployeeRecord(String[] record) {
 
-        if (recordExists(record)) {
+        if (recordExists(record, -1)) {
             AlertUtil.showDuplicateRecordExists();
             return;
         }
@@ -95,7 +94,7 @@ public class EmployeeRepository {
 
     public void updateEmployeeRecord(String[] record) {
 
-        if (recordExists(record)) {
+        if (recordExists(record, Integer.parseInt(record[0]))) {
             AlertUtil.showDuplicateRecordExists();
             return;
         }

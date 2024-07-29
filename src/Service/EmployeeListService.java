@@ -11,16 +11,16 @@ public class EmployeeListService {
         this.employeeList = employeeList;
     }
 
-    private boolean recordExists(Employee newEmp) {
+    private boolean recordExists(Employee newEmp, int currentEmpId) {
         for (Employee emp : employeeList) {
 
-            if (emp.getEmployeeID() == newEmp.getEmployeeID() ||
-                emp.getPhoneNumber().equals(newEmp.getPhoneNumber()) ||
+            if (emp.getEmployeeID() != currentEmpId &&
+                (emp.getPhoneNumber().equals(newEmp.getPhoneNumber()) ||
                 emp.getAddress().equals(newEmp.getAddress()) ||
                 emp.getTinNumber().equals(newEmp.getTinNumber()) ||
                 emp.getSssNumber().equals(newEmp.getSssNumber()) ||
                 emp.getPhilhealthNumber().equals(newEmp.getPhilhealthNumber()) ||
-                emp.getPagibigNumber().equals(newEmp.getPagibigNumber())) {
+                emp.getPagibigNumber().equals(newEmp.getPagibigNumber()))) {
 
                 return true;
             }
@@ -29,14 +29,14 @@ public class EmployeeListService {
     }
 
     public void addEmployee(Employee employee) {
-        if (recordExists(employee)) {
+        if (recordExists(employee, -1)) {
             return;
         }
         employeeList.add(employee);
     }
 
     public void updateEmployee(Employee updatedEmployee) {
-        if (recordExists(updatedEmployee)){
+        if (recordExists(updatedEmployee, updatedEmployee.getEmployeeID())){
             return;
         }
 
