@@ -44,6 +44,17 @@ public class AlertUtil {
         showAlert(Alert.AlertType.INFORMATION, "Record Deletion", "Record deleted successfully");
     }
 
+    public static void showInvalidCredentialAlert() {
+        showAlert(Alert.AlertType.ERROR,"Invalid Credentials","The username or password you entered is incorrect.");
+    }
+
+    public static void showMissingCredentialAlert() {
+        showAlert(Alert.AlertType.WARNING,"Missing Credentials","Please enter both username and password.");
+    }
+
+    public static void showSuccessfulLoginAlert() {
+        showAlert(Alert.AlertType.INFORMATION,"Login Successful","You have successfully logged in!");
+    }
 
     private static ButtonType showAlert(Alert.AlertType type, String title, String message, ButtonType defaultButtonType) {
         Alert alert = new Alert(type);
