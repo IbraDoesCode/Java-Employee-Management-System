@@ -2,13 +2,10 @@ package Controller;
 
 import Model.Employee;
 import Service.PayrollService;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -17,7 +14,7 @@ import java.io.IOException;
 public class PayrollCalculatorController {
 
     @FXML
-    private TextField IdTextField, nameTextField;
+    private TextField IdTextField, nameTextField, basicTextField;
 
     @FXML
     private TextField hourlyRateTextField, hoursWorkedTextField, OtTextField, OtPayTextField, regularPayTextField;
@@ -31,12 +28,6 @@ public class PayrollCalculatorController {
     @FXML
     private TextField grossPayTextField, contributionsTextField, taxableIncomeTextField, taxTextField, netPayTextField;
 
-    @FXML
-    private ComboBox<String> monthComboBox;
-
-    @FXML
-    private DatePicker payDatePicker;
-
     private Employee employee;
 
     @FXML
@@ -44,10 +35,6 @@ public class PayrollCalculatorController {
 
         hoursWorkedTextField.textProperty().addListener(((e) -> populatePayDetails()));
         OtTextField.textProperty().addListener((e) -> populatePayDetails());
-
-        monthComboBox.setItems(FXCollections.observableArrayList("January", "February", "March", "April", "May", "June",
-                                                            "July", "August", "September", "October", "Novmember", "December"));
-
     }
 
     public void showPayrollForm(Employee employee) throws IOException {
@@ -69,14 +56,12 @@ public class PayrollCalculatorController {
         populateFields();
     }
 
-    private String retrieveDateAsString() {
-        return payDatePicker.getValue().toString();
-    }
 
     private void populateFields() {
 
         IdTextField.setText(String.valueOf(employee.getEmployeeID()));
         nameTextField.setText(employee.getFirstName() + " " + employee.getLastName());
+        basicTextField.setText(String.valueOf(employee.getBasicSalary()));
         hourlyRateTextField.setText(String.valueOf(employee.getHourlyRate()));
         riceSubsidyTextField.setText(String.valueOf(employee.getRiceSubsidy()));
         clothingTextField.setText(String.valueOf(employee.getClothingAllowance()));
