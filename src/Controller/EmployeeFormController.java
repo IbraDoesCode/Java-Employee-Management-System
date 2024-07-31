@@ -1,7 +1,7 @@
 package Controller;
 
 import Model.Employee;
-import Service.EmployeeRepository;
+import Service.EmployeeDataService;
 import Service.EmployeeListService;
 import Util.AlertUtil;
 import javafx.collections.FXCollections;
@@ -15,9 +15,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
-public class EmployeeDetailsController {
+public class EmployeeFormController {
 
-    private final EmployeeRepository empDataService = new EmployeeRepository();
+    private final EmployeeDataService empDataService = new EmployeeDataService();
     private EmployeeListService employeeListService;
     private Employee employee;
     private boolean updateMode = false;
@@ -55,7 +55,7 @@ public class EmployeeDetailsController {
         }
     }
 
-    public void setEmployeeTableService(EmployeeListService employeeListService) {
+    public void setEmpListService(EmployeeListService employeeListService) {
         this.employeeListService = employeeListService;
     }
 
@@ -120,7 +120,7 @@ public class EmployeeDetailsController {
                 }
             }
         } catch (NumberFormatException e) {
-            AlertUtil.showAlert(Alert.AlertType.ERROR, "Invalid Number Format", "Please enter a valid number.");
+            AlertUtil.showInvalidNumberFormatAlert();
         }
     }
 
@@ -168,17 +168,17 @@ public class EmployeeDetailsController {
 
     public void displayEmployeeDialog(boolean updateMode, Employee employee, EmployeeListService empListService, boolean showOnly) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeDetails.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeForm.fxml"));
             DialogPane empDetailsDialogPane = loader.load();
 
-            EmployeeDetailsController controller = loader.getController();
-            controller.setEmployeeTableService(empListService);
+            EmployeeFormController controller = loader.getController();
+            controller.setEmpListService(empListService);
 
             if (updateMode) {
                 controller.setEmployee(employee);
             } else if (employee != null) {
                 controller.setEmployee(employee);
-                controller.disableTextFields();
+                controller.disableAllFields();
             }
 
             Dialog<ButtonType> dialog = new Dialog<>();
@@ -199,9 +199,13 @@ public class EmployeeDetailsController {
         }
     }
 
-    private void disableTextFields() {
+    private void disableAllFields() {
         for (TextField textField : textFields) {
             textField.setEditable(false);
         }
+        dobDatePicker.setDisable(true);
+        hireDatePicker.setDisable(true);
+        departmentComboBox.setDisable(true);
+        statusComboBox.setDisable(true);
     }
 }

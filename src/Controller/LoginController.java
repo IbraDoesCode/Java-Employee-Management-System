@@ -55,7 +55,7 @@ public class LoginController {
             }
 
             AlertUtil.showSuccessfulLoginAlert();
-            new EmployeeManagementController().showMainUI();
+            new EmployeeListController().displayMainUI();
             closeStage();
 
         } catch (IOException | CsvException e) {

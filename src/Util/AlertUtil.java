@@ -56,6 +56,10 @@ public class AlertUtil {
         showAlert(Alert.AlertType.INFORMATION,"Login Successful","You have successfully logged in!");
     }
 
+    public static void showInvalidNumberFormatAlert() {
+        showAlert(Alert.AlertType.ERROR, "Invalid Number Format", "Please enter a valid number.");
+    }
+
     private static ButtonType showAlert(Alert.AlertType type, String title, String message, ButtonType defaultButtonType) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

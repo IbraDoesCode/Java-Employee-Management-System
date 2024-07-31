@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class PayrollCalculatorController {
+public class PayrollController {
 
     @FXML
     private TextField IdTextField, nameTextField, basicTextField;
@@ -38,10 +38,10 @@ public class PayrollCalculatorController {
     }
 
     public void showPayrollForm(Employee employee) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/PayrollCalculator.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Payroll.fxml"));
         Parent root = loader.load();
 
-        PayrollCalculatorController controller = loader.getController();
+        PayrollController controller = loader.getController();
         controller.setEmployee(employee);
 
         Stage stage = new Stage();
@@ -106,7 +106,7 @@ public class PayrollCalculatorController {
             taxTextField.setText(String.format("%.2f", tax));
             netPayTextField.setText(String.format("%.2f", net));
 
-        } catch (NumberFormatException | ArithmeticException | NullPointerException e) {
+        } catch (Exception e) {
             regularPayTextField.setText("0.00");
             OtPayTextField.setText("0.00");
             sssTextField.setText("0.00");

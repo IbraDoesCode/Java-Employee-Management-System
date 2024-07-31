@@ -1,7 +1,7 @@
 package Controller;
 
 import Model.Employee;
-import Service.EmployeeRepository;
+import Service.EmployeeDataService;
 import Service.EmployeeListService;
 import Util.AlertUtil;
 import javafx.collections.FXCollections;
@@ -13,15 +13,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
-public class EmployeeManagementController {
+public class EmployeeListController {
 
-    private final EmployeeRepository empDataService;
+    private final EmployeeDataService empDataService;
 
     private final ObservableList<Employee> employeeObservableList;
 
@@ -36,8 +36,8 @@ public class EmployeeManagementController {
     @FXML
     private TableColumn<Employee, String> firstNameColumn, lastNameColumn, tinNoColumn, sssNoColumn, philhealthNoColumn, pagibigNoColumn;
 
-    public EmployeeManagementController() {
-        empDataService = new EmployeeRepository();
+    public EmployeeListController() {
+        empDataService = new EmployeeDataService();
         employeeObservableList = FXCollections.observableArrayList();
         employeeListService = new EmployeeListService(employeeObservableList);
     }
@@ -47,11 +47,11 @@ public class EmployeeManagementController {
         initializeTableColumns();
         refreshEmployeeData();
         setDataToEmployeeTable();
-        handleViewEmployeeDetails();
+        handleViewRecord();
     }
 
-    public void showMainUI() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeManagement.fxml"));
+    public void displayMainUI() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeList.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("MotorPH HR System");
@@ -59,16 +59,24 @@ public class EmployeeManagementController {
         stage.show();
     }
 
+    private void handleViewRecord() {
+        employeeTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getClickCount() == 2) {
+                new EmployeeFormController().displayEmployeeDialog(false, selectedEmployee(), employeeListService,true);
+            }
+        });
+    }
+
     @FXML
     private void handleAddNewRecord() {
-        new EmployeeDetailsController().displayEmployeeDialog(false, null, employeeListService, false);
+        new EmployeeFormController().displayEmployeeDialog(false, null, employeeListService, false);
     }
 
     @FXML
     private void handleUpdateRecord() {
         Employee selectedEmployee = selectedEmployee();
         if (selectedEmployee != null) {
-            new EmployeeDetailsController().displayEmployeeDialog(true, selectedEmployee, employeeListService, false);
+            new EmployeeFormController().displayEmployeeDialog(true, selectedEmployee, employeeListService, false);
         } else {
             AlertUtil.showNoSelectionAlert("Please select an employee record to update");
         }
@@ -92,14 +100,6 @@ public class EmployeeManagementController {
         }
     }
 
-    private void handleViewEmployeeDetails() {
-        employeeTable.setOnMouseClicked((MouseEvent event) -> {
-            if (event.getClickCount() == 2) {
-                new EmployeeDetailsController().displayEmployeeDialog(false, selectedEmployee(), employeeListService, true);
-            }
-        });
-    }
-
     @FXML
     public void handleComputePayroll() {
 
@@ -109,7 +109,7 @@ public class EmployeeManagementController {
         }
 
         try {
-            new PayrollCalculatorController().showPayrollForm(selectedEmployee());
+            new PayrollController().showPayrollForm(selectedEmployee());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -157,9 +157,7 @@ public class EmployeeManagementController {
     }
 
     private void refreshEmployeeData() {
-
-        List<Employee> employeeList = empDataService.getAllEmployees();
-        employeeObservableList.setAll(employeeList);
+        employeeObservableList.setAll(empDataService.getAllEmployees());
     }
 
     private void setDataToEmployeeTable() {

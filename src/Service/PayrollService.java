@@ -17,15 +17,6 @@ public class PayrollService {
 
     private static final double OVERTIME_RATE = 0.25;
 
-    private static final double[][] taxBrackets = {
-            {20_832, 0, 0}, // No withholding tax for 20,832 and below
-            {33_333, 20_833, 0.20}, // 20% in excess of 20,833
-            {66_667, 33_333, 0.25, 2500}, // 2,500 plus 25% in excess of 33,333
-            {166_667, 66_667, 0.30, 10_833}, // 10,833 plus 30% in excess of 66,667
-            {666_667, 166_667, 0.32, 40_833.33}, // 40,833.33 plus 32% in excess of 166,667
-            {Double.MAX_VALUE, 666_667, 0.35, 200_833.33} // 200,833.33 plus 35% in excess of 666,667
-    };
-
     private static final TreeMap<Double, Double> sssContributionTable = initializeSssTable();
 
     // Properties
@@ -107,14 +98,27 @@ public class PayrollService {
     }
 
     public double calculateWithholdingTax() {
-        for (double[] taxBracket : taxBrackets) {
-            if (taxableIncome() <= taxBracket[0]) {
-                return taxBracket.length == 3 ? taxBracket[2] * (taxableIncome() - taxBracket[1]) :
-                        taxBracket[3] + taxBracket[2] * (taxableIncome() - taxBracket[1]);
-            }
+
+        double salary = basicSalary();
+        double tax;
+
+        if (salary <= 20_832) {
+            tax = 0;
+        } else if (salary <= 33_332) {
+            tax = (salary - 20_833) * 0.20;
+        } else if (salary <= 66_666) {
+            tax = 2_500 + (salary - 33_333) * 0.25;
+        } else if (salary <= 166_666) {
+            tax = 10_833 + (salary - 66_667) * 0.30;
+        } else if (salary <= 666_666) {
+            tax = 40_833.33 + (salary - 166_667) * 0.32;
+        } else {
+            tax = 200_833.33 + (salary - 666_667) * 0.35;
         }
-        return 0;
+
+        return tax;
     }
+
 
     public double calculatePartialDeductions() {
         return calculateSssContribution() + calculatePhilhealthContribution() + calculatePagIbigContribution();

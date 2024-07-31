@@ -7,7 +7,7 @@ import Util.CsvHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmployeeRepository {
+public class EmployeeDataService {
 
     private final CsvHandler csvHandler;
 
@@ -17,7 +17,7 @@ public class EmployeeRepository {
 
     private final String[] HEADERS;
 
-    public EmployeeRepository() {
+    public EmployeeDataService() {
         this.csvHandler = new CsvHandler(EMPLOYEE_DATA_FILE);
         employeeData = csvHandler.retrieveCsvData(true);
         HEADERS = csvHandler.retrieveFieldNames();
@@ -112,18 +112,10 @@ public class EmployeeRepository {
     }
 
     public void deleteEmployeeRecord(int employeeId) {
-        List<String[]> updatedEmployeesRecord = new ArrayList<>();
 
-        for (String[] row : employeeData) {
-            if (employeeId != Integer.parseInt(row[0])) {
-                updatedEmployeesRecord.add(row);
-            }
-        }
+        employeeData.removeIf(record -> record[0].equals(String.valueOf(employeeId)));
 
-        employeeData.clear();
-        employeeData.addAll(updatedEmployeesRecord);
-
-        csvHandler.writeDataToCsv(updatedEmployeesRecord, HEADERS);
+        csvHandler.writeDataToCsv(employeeData, HEADERS);
         AlertUtil.showRecordDeletedAlert();
         System.out.println("Record deleted");
     }
