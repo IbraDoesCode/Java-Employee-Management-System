@@ -3,25 +3,44 @@ package Service;
 import Model.Employee;
 import Util.AlertUtil;
 import Util.CsvHandler;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class EmployeeDataService {
 
+    private static final String EMPLOYEE_DATA_FILE = "Data/employeeData.csv";
+
     private final CsvHandler csvHandler;
-
-    private final String EMPLOYEE_DATA_FILE = "Data/employeeData.csv";
-
-    private final List<String[]> employeeData;
-
     private final String[] HEADERS;
+    private final List<String[]> employeeData;
+    private final ObservableList<Employee> employeeObservableList;
 
     public EmployeeDataService() {
         this.csvHandler = new CsvHandler(EMPLOYEE_DATA_FILE);
         employeeData = csvHandler.retrieveCsvData(true);
         HEADERS = csvHandler.retrieveFieldNames();
+        employeeObservableList = FXCollections.observableArrayList(getAllEmployees());
+    }
 
+    public List<Employee> getAllEmployees() {
+        List<Employee> employees = new ArrayList<>();
+
+        for (String[] row : employeeData) {
+            employees.add(convertArrayToEmployee(row));
+        }
+        return employees;
+    }
+
+    public ObservableList<Employee> getEmployeeObservableList() {
+        return employeeObservableList;
+    }
+
+    public int getNewEmployeeID() {
+        return Integer.parseInt(employeeData.getLast()[0]) + 1;
     }
 
     public boolean recordExists(String[] record, int currentEmpId) {
@@ -47,19 +66,41 @@ public class EmployeeDataService {
         }
 
         employeeData.add(record);
+        employeeObservableList.add(convertArrayToEmployee(record));
 
         csvHandler.writeDataToCsv(employeeData, HEADERS);
         AlertUtil.showRecordSavedAlert();
         System.out.println("Record saved");
     }
 
-    public List<Employee> getAllEmployees() {
-        List<Employee> employees = new ArrayList<>();
+    public void updateEmployeeRecord(String[] record) {
 
-        for (String[] row : employeeData) {
-            employees.add(convertArrayToEmployee(row));
+        if (recordExists(record, Integer.parseInt(record[0]))) {
+            AlertUtil.showDuplicateRecordExists();
+            return;
         }
-        return employees;
+
+        for (int i = 0; i < employeeData.size(); i++) {
+            String[] row = employeeData.get(i);
+            if (row[0].equals(record[0])) {
+                employeeData.set(i, record);
+                employeeObservableList.set(i, convertArrayToEmployee(record));
+                break;
+            }
+        }
+        csvHandler.writeDataToCsv(employeeData, HEADERS);
+        AlertUtil.showRecordUpdatedAlert();
+        System.out.println("Record Updated");
+    }
+
+    public void deleteEmployeeRecord(int employeeId) {
+
+        employeeData.removeIf(record -> record[0].equals(String.valueOf(employeeId)));
+        employeeObservableList.removeIf(employee -> employee.getEmployeeID() == employeeId);
+
+        csvHandler.writeDataToCsv(employeeData, HEADERS);
+        AlertUtil.showRecordDeletedAlert();
+        System.out.println("Record deleted");
     }
 
     public Employee convertArrayToEmployee(String[] employeeData) {
@@ -86,37 +127,5 @@ public class EmployeeDataService {
                 Double.parseDouble(employeeData[19]),
                 Double.parseDouble(employeeData[20])
         );
-    }
-
-    public int getNewEmployeeID() {
-        return Integer.parseInt(employeeData.getLast()[0]) + 1;
-    }
-
-    public void updateEmployeeRecord(String[] record) {
-
-        if (recordExists(record, Integer.parseInt(record[0]))) {
-            AlertUtil.showDuplicateRecordExists();
-            return;
-        }
-
-        for (int i = 0; i < employeeData.size(); i++) {
-            String[] row = employeeData.get(i);
-            if (row[0].equals(record[0])) {
-                employeeData.set(i, record);
-                break;
-            }
-        }
-        csvHandler.writeDataToCsv(employeeData, HEADERS);
-        AlertUtil.showRecordUpdatedAlert();
-        System.out.println("Record Updated");
-    }
-
-    public void deleteEmployeeRecord(int employeeId) {
-
-        employeeData.removeIf(record -> record[0].equals(String.valueOf(employeeId)));
-
-        csvHandler.writeDataToCsv(employeeData, HEADERS);
-        AlertUtil.showRecordDeletedAlert();
-        System.out.println("Record deleted");
     }
 }

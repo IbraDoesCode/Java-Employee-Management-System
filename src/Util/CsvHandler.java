@@ -11,6 +11,7 @@ import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 
+
 public class CsvHandler {
 
     private final String filepath;

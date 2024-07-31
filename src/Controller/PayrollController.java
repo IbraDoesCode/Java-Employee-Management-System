@@ -14,25 +14,48 @@ import java.io.IOException;
 public class PayrollController {
 
     @FXML
-    private TextField IdTextField, nameTextField, basicTextField;
-
+    private TextField IdTextField;
     @FXML
-    private TextField hourlyRateTextField, hoursWorkedTextField, OtTextField, OtPayTextField, regularPayTextField;
-
+    private TextField  nameTextField;
     @FXML
-    private TextField riceSubsidyTextField, clothingTextField, phoneTextField;
-
+    private TextField basicTextField;
     @FXML
-    private TextField sssTextField, pagibigTextField, philhealthTextField;
-
+    private TextField hourlyRateTextField;
     @FXML
-    private TextField grossPayTextField, contributionsTextField, taxableIncomeTextField, taxTextField, netPayTextField;
+    private TextField hoursWorkedTextField;
+    @FXML
+    private TextField OtTextField;
+    @FXML
+    private TextField OtPayTextField;
+    @FXML
+    private TextField regularPayTextField;
+    @FXML
+    private TextField riceSubsidyTextField;
+    @FXML
+    private TextField clothingTextField;
+    @FXML
+    private TextField phoneTextField;
+    @FXML
+    private TextField sssTextField;
+    @FXML
+    private TextField pagibigTextField;
+    @FXML
+    private TextField philhealthTextField;
+    @FXML
+    private TextField grossPayTextField;
+    @FXML
+    private TextField contributionsTextField;
+    @FXML
+    private TextField taxableIncomeTextField;
+    @FXML
+    private TextField taxTextField;
+    @FXML
+    private TextField netPayTextField;
 
     private Employee employee;
 
     @FXML
     public void initialize() {
-
         hoursWorkedTextField.textProperty().addListener(((e) -> populatePayDetails()));
         OtTextField.textProperty().addListener((e) -> populatePayDetails());
     }

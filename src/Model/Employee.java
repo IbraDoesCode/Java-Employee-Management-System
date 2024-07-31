@@ -1,28 +1,29 @@
 package Model;
 
+
 public class Employee {
 
-    private int employeeID;
-    private String lastName;
-    private String firstName;
-    private String birthday;
-    private String address;
-    private String phoneNumber;
-    private String hireDate;
-    private String sssNumber;
-    private String philhealthNumber;
-    private String tinNumber;
-    private String pagibigNumber;
-    private String status;
-    private String position;
-    private String department;
-    private String immediateSupervisor;
-    private double basicSalary;
-    private double riceSubsidy;
-    private double phoneAllowance;
-    private double clothingAllowance;
-    private double grossSemiMonthly;
-    private double hourlyRate;
+    private final int employeeID;
+    private final String lastName;
+    private final String firstName;
+    private final String birthday;
+    private final String address;
+    private final String phoneNumber;
+    private final String hireDate;
+    private final String sssNumber;
+    private final String philhealthNumber;
+    private final String tinNumber;
+    private final String pagibigNumber;
+    private final String status;
+    private final String position;
+    private final String department;
+    private final String immediateSupervisor;
+    private final double basicSalary;
+    private final double riceSubsidy;
+    private final double phoneAllowance;
+    private final double clothingAllowance;
+    private final double grossSemiMonthly;
+    private final double hourlyRate;
 
     public Employee(int employeeID, String lastName, String firstName, String birthday, String address,
     String phoneNumber, String hireDate, String sssNumber, String philhealthNumber, String tinNumber, String pagibigNumber,

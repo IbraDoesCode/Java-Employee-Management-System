@@ -5,12 +5,12 @@ import Model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserCredentialService {
 
-    private final CsvHandler csvHandler;
+public class UserCredentialService {
 
     private final String USER_CREDENTIAL_FILE = "Data/userCredentials.csv";
 
+    private final CsvHandler csvHandler;
     private final List<String[]> userCredentialData;
 
     public UserCredentialService() {
