@@ -2,7 +2,6 @@ package Controller;
 
 import Model.Employee;
 import Service.EmployeeDataService;
-import Service.EmployeeListService;
 import Util.AlertUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -15,54 +14,142 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
+
 public class EmployeeFormController {
 
-    private final EmployeeDataService empDataService = new EmployeeDataService();
-    private EmployeeListService employeeListService;
-    private Employee employee;
-    private boolean updateMode = false;
-
+    // Constants
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("M/d/yyyy");
     private static final String[] DEPARTMENTS = {"Human Resources", "Payroll", "Information Technology", "Accounting", "Corporate", "Customer Service", "Logistics", "Sales"};
     private static final String[] STATUSES = {"Regular", "Part-time", "Probationary", "Intern", "Resigned"};
 
+    // UI Properties
     @FXML
-    private TextField firstNameTextField, lastNameTextField, phoneNoTextField, addressTextField;
+    private TextField firstNameTextField;
     @FXML
-    private TextField employeeIDTextField, positionTextField, supervisorTextField;
+    private TextField lastNameTextField;
     @FXML
-    private TextField tinNoTextField, sssNoTextField, philhealthNoTextField, pagibigNoTextField;
+    private TextField phoneNoTextField;
     @FXML
-    private TextField basicSalaryTextField, riceTextField, clothingTextField, phoneTextField;
+    private TextField addressTextField;
     @FXML
-    private DatePicker dobDatePicker, hireDatePicker;
+    private TextField employeeIDTextField;
     @FXML
-    private ComboBox<String> departmentComboBox, statusComboBox;
+    private TextField positionTextField;
+    @FXML
+    private TextField supervisorTextField;
+    @FXML
+    private TextField tinNoTextField;
+    @FXML
+    private TextField sssNoTextField;
+    @FXML
+    private TextField philhealthNoTextField;
+    @FXML
+    private TextField pagibigNoTextField;
+    @FXML
+    private TextField basicSalaryTextField;
+    @FXML
+    private TextField riceTextField;
+    @FXML
+    private TextField clothingTextField;
+    @FXML
+    private TextField phoneTextField;
 
+    @FXML
+    private DatePicker dobDatePicker;
+    @FXML
+    private DatePicker hireDatePicker;
+
+    @FXML
+    private ComboBox<String> departmentComboBox;
+    @FXML
+    private ComboBox<String> statusComboBox;
+
+    // Other Properties
+    private EmployeeDataService empDataService;
+    private Employee employee;
+    private boolean updateMode = false;
     private TextField[] textFields;
 
     @FXML
     private void initialize() {
-        departmentComboBox.setItems(FXCollections.observableArrayList(DEPARTMENTS));
-        statusComboBox.setItems(FXCollections.observableArrayList(STATUSES));
+
+        initializeComboBox();
 
         textFields = new TextField[]{lastNameTextField, firstNameTextField, phoneNoTextField, addressTextField,
                 employeeIDTextField, positionTextField, supervisorTextField, tinNoTextField, sssNoTextField,
                 philhealthNoTextField, pagibigNoTextField, basicSalaryTextField, riceTextField, clothingTextField, phoneTextField};
 
-        if (!updateMode) {
-            employeeIDTextField.setText(String.valueOf(empDataService.getNewEmployeeID()));
-        }
     }
 
-    public void setEmpListService(EmployeeListService employeeListService) {
-        this.employeeListService = employeeListService;
+    private void initializeComboBox() {
+        departmentComboBox.setItems(FXCollections.observableArrayList(DEPARTMENTS));
+        statusComboBox.setItems(FXCollections.observableArrayList(STATUSES));
     }
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
         updateMode = true;
         populateFields();
+    }
+
+    public void setEmployeeDataService(EmployeeDataService empDataService) {
+        this.empDataService = empDataService;
+    }
+
+    @FXML
+    public void handleSaveRecord() {
+        if (!validateFields()) {
+            AlertUtil.showIncompleteDataAlert();
+            return;
+        }
+
+        try {
+            if (AlertUtil.confirmDetails()) {
+                String[] record = retrieveInputAsStringArray();
+
+                if (updateMode) {
+                    empDataService.updateEmployeeRecord(record);
+                } else {
+                    empDataService.addEmployeeRecord(record);
+                }
+            }
+        } catch (NumberFormatException e) {
+            AlertUtil.showInvalidNumberFormatAlert();
+        }
+    }
+
+    public void displayEmployeeDialog(boolean updateMode, Employee employee, EmployeeDataService empDataService, boolean showOnly) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeForm.fxml"));
+            DialogPane empDetailsDialogPane = loader.load();
+
+            EmployeeFormController controller = loader.getController();
+            controller.setEmployeeDataService(empDataService);
+            controller.setEmployeeID();
+
+            if (updateMode) {
+                controller.setEmployee(employee);
+            } else if (employee != null) {
+                controller.setEmployee(employee);
+            }
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(empDetailsDialogPane);
+
+            if (showOnly) {
+                empDetailsDialogPane.lookupButton(ButtonType.OK).setVisible(false);
+                empDetailsDialogPane.lookupButton(ButtonType.CANCEL).setVisible(false);
+                controller.disableInputFields();
+            }
+
+            Optional<ButtonType> clickedButton = dialog.showAndWait();
+            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK && !showOnly) {
+                controller.handleSaveRecord();
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean isDatesInputValid() {
@@ -78,7 +165,7 @@ public class EmployeeFormController {
         return true;
     }
 
-    public boolean validateFields() {
+    private boolean validateFields() {
         return areTextFieldsComplete() && isDatesInputValid();
     }
 
@@ -100,39 +187,6 @@ public class EmployeeFormController {
                 riceTextField.getText(), phoneTextField.getText(), clothingTextField.getText(),
                 String.format("%.2f", semiMonthlyRate), String.format("%.2f", hourlyRate)
         };
-    }
-
-    @FXML
-    public void handleSaveRecord() {
-        if (!validateFields()) {
-            AlertUtil.showIncompleteDataAlert();
-            return;
-        }
-
-        try {
-            if (AlertUtil.confirmDetails()) {
-                String[] record = retrieveInputAsStringArray();
-
-                if (updateMode) {
-                    handleUpdateMode(record);
-                } else {
-                    handleAddMode(record);
-                }
-            }
-        } catch (NumberFormatException e) {
-            AlertUtil.showInvalidNumberFormatAlert();
-        }
-    }
-
-    private void handleAddMode(String[] record) {
-        empDataService.addEmployeeRecord(record);
-        employeeListService.addEmployee(empDataService.convertArrayToEmployee(record));
-    }
-
-    private void handleUpdateMode(String[] record) {
-        empDataService.updateEmployeeRecord(record);
-        Employee updatedEmployee = empDataService.convertArrayToEmployee(record);
-        employeeListService.updateEmployee(updatedEmployee);
     }
 
     private LocalDate convertStringToLocalDate(String dateString) {
@@ -166,40 +220,11 @@ public class EmployeeFormController {
         statusComboBox.setValue(employee.getStatus());
     }
 
-    public void displayEmployeeDialog(boolean updateMode, Employee employee, EmployeeListService empListService, boolean showOnly) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeForm.fxml"));
-            DialogPane empDetailsDialogPane = loader.load();
-
-            EmployeeFormController controller = loader.getController();
-            controller.setEmpListService(empListService);
-
-            if (updateMode) {
-                controller.setEmployee(employee);
-            } else if (employee != null) {
-                controller.setEmployee(employee);
-                controller.disableAllFields();
-            }
-
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setDialogPane(empDetailsDialogPane);
-
-            if (showOnly) {
-                empDetailsDialogPane.lookupButton(ButtonType.OK).setVisible(false);
-                empDetailsDialogPane.lookupButton(ButtonType.CANCEL).setVisible(false);
-            }
-
-            Optional<ButtonType> clickedButton = dialog.showAndWait();
-            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK && !showOnly) {
-                controller.handleSaveRecord();
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private void setEmployeeID() {
+        employeeIDTextField.setText(String.valueOf(empDataService.getNewEmployeeID()));
     }
 
-    private void disableAllFields() {
+    private void disableInputFields() {
         for (TextField textField : textFields) {
             textField.setEditable(false);
         }
