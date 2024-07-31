@@ -150,18 +150,17 @@ public class EmployeeListController {
 
                 if (String.valueOf(employee.getEmployeeID()).equals(searchKeyword)) {
                     return true;
-                } else if (employee.getFirstName().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.getLastName().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getTinNumber().contains(searchKeyword)) {
+                }else if (employee.getFirstName().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getSssNumber().contains(searchKeyword)) {
+                } else if (employee.getTinNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getPagibigNumber().contains(searchKeyword)) {
+                } else if (employee.getSssNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getPhilhealthNumber().contains(searchKeyword)) {
+                } else if (employee.getPagibigNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
-                }
-                else return employee.getLastName().toLowerCase().contains(searchKeyword);
+                } else return employee.getPhilhealthNumber().toLowerCase().contains(searchKeyword);
 
             });
 

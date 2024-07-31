@@ -56,27 +56,22 @@ public class Employee {
         return employeeID;
     }
     
-    
     public String getLastName() {
         return lastName;
     }
-    
     
     public String getFirstName() {
         return firstName;
     }
     
-    
     public String getBirthday() {
         return birthday;
     }
     
-    
     public String getAddress() {
         return address;
     }
-    
-    
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -89,56 +84,45 @@ public class Employee {
         return sssNumber;
     }
     
-    
     public String getPhilhealthNumber() {
         return philhealthNumber;
     }
-    
-    
+
     public String getTinNumber() {
         return tinNumber;
     }
-    
     
     public String getPagibigNumber() {
         return pagibigNumber;
     }
     
-    
     public String getStatus() {
         return status;
     }
-    
     
     public String getPosition() {
         return position;
     }
     
-    
     public String getDepartment() {
         return department;
     }
     
-    
     public String getImmediateSupervisor() {
         return immediateSupervisor;
     }
-    
-    
+
     public double getBasicSalary() {
         return basicSalary;
     }
-    
-    
+
     public double getRiceSubsidy() {
         return riceSubsidy;
     }
     
-    
     public double getPhoneAllowance() {
         return phoneAllowance;
     }
-    
     
     public double getClothingAllowance() {
         return clothingAllowance;
