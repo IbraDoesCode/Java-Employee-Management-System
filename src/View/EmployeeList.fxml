@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -62,22 +63,36 @@
          </BorderPane.margin></VBox>
     </left>
     <center>
-          <TableView fx:id="employeeTable" prefHeight="625.0" prefWidth="900.0">
-              <columns>
-                  <TableColumn fx:id="employeeIdColumn" minWidth="137.0" text="Employee #" />
-                  <TableColumn fx:id="lastNameColumn" minWidth="137.0" text="Last Name" />
-                  <TableColumn fx:id="firstNameColumn" minWidth="137.0" text="First Name" />
-                  <TableColumn fx:id="tinNoColumn" minWidth="137.0" text="Tin #" />
-                  <TableColumn fx:id="sssNoColumn" minWidth="137.0" text="SSS #" />
-                  <TableColumn fx:id="philhealthNoColumn" minWidth="137.0" text="Philhealth #" />
-                  <TableColumn fx:id="pagibigNoColumn" minWidth="137.0" text="Pagibig #" />
-              </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
+      <VBox spacing="5.0">
          <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </BorderPane.margin>
-          </TableView>
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="960.0" spacing="5.0">
+               <children>
+                  <Label text="Employee Search">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="searchTextField" prefHeight="25.0" prefWidth="200.0" />
+               </children>
+            </HBox>
+                <TableView fx:id="employeeTable" prefHeight="625.0" prefWidth="900.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="employeeIdColumn" minWidth="137.0" text="Employee #" />
+                        <TableColumn fx:id="lastNameColumn" minWidth="137.0" text="Last Name" />
+                        <TableColumn fx:id="firstNameColumn" minWidth="137.0" text="First Name" />
+                        <TableColumn fx:id="tinNoColumn" minWidth="137.0" text="Tin #" />
+                        <TableColumn fx:id="sssNoColumn" minWidth="137.0" text="SSS #" />
+                        <TableColumn fx:id="philhealthNoColumn" minWidth="137.0" text="Philhealth #" />
+                        <TableColumn fx:id="pagibigNoColumn" minWidth="137.0" text="Pagibig #" />
+                    </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+                </TableView>
+         </children>
+      </VBox>
     </center>
 </BorderPane>

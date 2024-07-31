@@ -4,12 +4,15 @@ import Model.Employee;
 import Service.EmployeeDataService;
 import Util.AlertUtil;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -19,6 +22,8 @@ import java.io.IOException;
 
 public class EmployeeListController {
 
+    @FXML
+    private TextField searchTextField;
     @FXML
     private TableView<Employee> employeeTable;
     @FXML
@@ -49,6 +54,7 @@ public class EmployeeListController {
         initializeTableColumns();
         setDataToEmployeeTable();
         handleViewRecord();
+        setupSearchListener();
     }
 
     public void displayMainUI() throws IOException {
@@ -60,21 +66,13 @@ public class EmployeeListController {
         stage.show();
     }
 
-    private void handleViewRecord() {
-        employeeTable.setOnMouseClicked((MouseEvent event) -> {
-            if (event.getClickCount() == 2) {
-                new EmployeeFormController().displayEmployeeDialog(false, selectedEmployee(), empDataService, true);
-            }
-        });
-    }
-
     @FXML
-    private void handleAddNewRecord() {
+    public void handleAddNewRecord() {
         new EmployeeFormController().displayEmployeeDialog(false, null, empDataService, false);
     }
 
     @FXML
-    private void handleUpdateRecord() {
+    public void handleUpdateRecord() {
         Employee selectedEmployee = selectedEmployee();
 
         if (selectedEmployee != null) {
@@ -115,6 +113,14 @@ public class EmployeeListController {
         }
     }
 
+    private void handleViewRecord() {
+        employeeTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getClickCount() == 2) {
+                new EmployeeFormController().displayEmployeeDialog(false, selectedEmployee(), empDataService, true);
+            }
+        });
+    }
+
     @FXML
     public void handleLogout() {
 
@@ -127,6 +133,46 @@ public class EmployeeListController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setupSearchListener() {
+        FilteredList<Employee> filteredData = new FilteredList<>(employeeObservableList, b -> true);
+
+        searchTextField.textProperty().addListener(((_, _, newValue) -> {
+
+            filteredData.setPredicate(employee -> {
+
+                if (newValue.isEmpty() || newValue.isBlank()) {
+                    return true;
+                }
+
+                String searchKeyword = newValue.toLowerCase();
+
+                if (String.valueOf(employee.getEmployeeID()).equals(searchKeyword)) {
+                    return true;
+                } else if (employee.getFirstName().toLowerCase().contains(searchKeyword)) {
+                    return true;
+                } else if (employee.getTinNumber().contains(searchKeyword)) {
+                    return true;
+                } else if (employee.getSssNumber().contains(searchKeyword)) {
+                    return true;
+                } else if (employee.getPagibigNumber().contains(searchKeyword)) {
+                    return true;
+                } else if (employee.getPhilhealthNumber().contains(searchKeyword)) {
+                    return true;
+                }
+                else return employee.getLastName().toLowerCase().contains(searchKeyword);
+
+            });
+
+        }));
+
+        SortedList<Employee> sortedData = new SortedList<>(filteredData);
+
+        sortedData.comparatorProperty().bind(employeeTable.comparatorProperty());
+
+        employeeTable.setItems(sortedData);
+
     }
 
     private void closeStage() {
