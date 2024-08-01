@@ -60,7 +60,7 @@ public class PayrollController {
         OtTextField.textProperty().addListener((e) -> populatePayDetails());
     }
 
-    public void showPayrollForm(Employee employee) throws IOException {
+    public void displayPayrollStage(Employee employee) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Payroll.fxml"));
         Parent root = loader.load();
 

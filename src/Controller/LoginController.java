@@ -19,7 +19,6 @@ public class LoginController {
 
     @FXML
     private TextField usernameTextField;
-
     @FXML
     private PasswordField passwordField;
 
@@ -27,7 +26,7 @@ public class LoginController {
         this.authService = new AuthenticationService();
     }
 
-    public void showLoginStage() throws IOException {
+    public void displayLoginStage() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Login.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
@@ -45,7 +44,6 @@ public class LoginController {
 
             if (username.isEmpty() || password.isEmpty()) {
                 AlertUtil.showMissingCredentialAlert();
-
                 return;
             }
 
@@ -55,7 +53,7 @@ public class LoginController {
             }
 
             AlertUtil.showSuccessfulLoginAlert();
-            new EmployeeListController().displayMainUI();
+            new EmployeeListController().displayMainStage();
             closeStage();
 
         } catch (IOException | CsvException e) {

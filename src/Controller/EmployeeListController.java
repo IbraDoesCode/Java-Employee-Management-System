@@ -53,11 +53,11 @@ public class EmployeeListController {
     public void initialize() {
         initializeTableColumns();
         setDataToEmployeeTable();
-        handleViewRecord();
+        setupViewRecordListener();
         setupSearchListener();
     }
 
-    public void displayMainUI() throws IOException {
+    public void displayMainStage() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeList.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
@@ -107,18 +107,10 @@ public class EmployeeListController {
         }
 
         try {
-            new PayrollController().showPayrollForm(selectedEmployee());
+            new PayrollController().displayPayrollStage(selectedEmployee());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void handleViewRecord() {
-        employeeTable.setOnMouseClicked((MouseEvent event) -> {
-            if (event.getClickCount() == 2) {
-                new EmployeeFormController().displayEmployeeDialog(false, selectedEmployee(), empDataService, true);
-            }
-        });
     }
 
     @FXML
@@ -127,12 +119,20 @@ public class EmployeeListController {
         try {
             boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Logout", "Are you sure you want to log out?");
             if (confirmed) {
-                new LoginController().showLoginStage();
+                new LoginController().displayLoginStage();
                 closeStage();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void setupViewRecordListener() {
+        employeeTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getClickCount() == 2) {
+                new EmployeeFormController().displayEmployeeDialog(false, selectedEmployee(), empDataService, true);
+            }
+        });
     }
 
     private void setupSearchListener() {

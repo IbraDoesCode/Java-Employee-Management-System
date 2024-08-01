@@ -53,7 +53,6 @@ public class EmployeeFormController {
     private TextField clothingTextField;
     @FXML
     private TextField phoneTextField;
-
     @FXML
     private DatePicker dobDatePicker;
     @FXML
@@ -233,4 +232,5 @@ public class EmployeeFormController {
         departmentComboBox.setDisable(true);
         statusComboBox.setDisable(true);
     }
+
 }
