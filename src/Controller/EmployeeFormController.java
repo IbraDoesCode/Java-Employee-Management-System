@@ -11,7 +11,6 @@ import javafx.scene.control.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 
@@ -174,7 +173,6 @@ public class EmployeeFormController {
 
     private String[] retrieveInputAsStringArray() {
         double basicSalary = Double.parseDouble(basicSalaryTextField.getText());
-        double semiMonthlyRate = basicSalary / 2;
         double hourlyRate = (basicSalary / 21) / 8;
 
         return new String[]{
@@ -183,18 +181,8 @@ public class EmployeeFormController {
                 formatDateToString(hireDatePicker.getValue()), sssNoTextField.getText(), philhealthNoTextField.getText(),
                 tinNoTextField.getText(), pagibigNoTextField.getText(), statusComboBox.getValue(), positionTextField.getText(),
                 departmentComboBox.getValue(), supervisorTextField.getText(), basicSalaryTextField.getText(),
-                riceTextField.getText(), phoneTextField.getText(), clothingTextField.getText(),
-                String.format("%.2f", semiMonthlyRate), String.format("%.2f", hourlyRate)
+                riceTextField.getText(), phoneTextField.getText(), clothingTextField.getText(), String.format("%.2f", hourlyRate)
         };
-    }
-
-    private LocalDate convertStringToLocalDate(String dateString) {
-        try {
-            return LocalDate.parse(dateString, DATE_FORMAT);
-        } catch (DateTimeParseException e) {
-            System.err.println("Invalid date format: " + dateString);
-            return null;
-        }
     }
 
     private void populateFields() {
@@ -213,8 +201,8 @@ public class EmployeeFormController {
         riceTextField.setText(String.valueOf(employee.getRiceSubsidy()));
         clothingTextField.setText(String.valueOf(employee.getClothingAllowance()));
         phoneTextField.setText(String.valueOf(employee.getPhoneAllowance()));
-        dobDatePicker.setValue(convertStringToLocalDate(employee.getBirthday()));
-        hireDatePicker.setValue(convertStringToLocalDate(employee.getHireDate()));
+        dobDatePicker.setValue(employee.getBirthday());
+        hireDatePicker.setValue(employee.getHireDate());
         departmentComboBox.setValue(employee.getDepartment());
         statusComboBox.setValue(employee.getStatus());
     }

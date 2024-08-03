@@ -6,6 +6,8 @@ import Util.CsvHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import java.util.List;
 public class EmployeeDataService {
 
     private static final String EMPLOYEE_DATA_FILE = "Data/employeeData.csv";
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("M/d/yyyy");
 
     private final CsvHandler csvHandler;
     private final String[] HEADERS;
@@ -108,10 +111,10 @@ public class EmployeeDataService {
                 Integer.parseInt(employeeData[0]),
                 employeeData[1],
                 employeeData[2],
-                employeeData[3],
+                LocalDate.parse(employeeData[3], DATE_FORMAT),
                 employeeData[4],
                 employeeData[5],
-                employeeData[6],
+                LocalDate.parse(employeeData[6], DATE_FORMAT),
                 employeeData[7],
                 employeeData[8],
                 employeeData[9],
@@ -124,7 +127,6 @@ public class EmployeeDataService {
                 Double.parseDouble(employeeData[16]),
                 Double.parseDouble(employeeData[17]),
                 Double.parseDouble(employeeData[18]),
-                Double.parseDouble(employeeData[19]),
                 Double.parseDouble(employeeData[20])
         );
     }
