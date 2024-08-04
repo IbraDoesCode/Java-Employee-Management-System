@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Employee;
+import Model.Mode;
 import Service.EmployeeDataService;
 import Util.AlertUtil;
 import javafx.collections.ObservableList;
@@ -68,7 +69,7 @@ public class EmployeeListController {
 
     @FXML
     public void handleAddNewRecord() {
-        new EmployeeFormController().displayEmployeeDialog(false, null, empDataService, false);
+        new EmployeeFormController().displayEmployeeDialog(Mode.ADD, null, empDataService);
     }
 
     @FXML
@@ -76,7 +77,7 @@ public class EmployeeListController {
         Employee selectedEmployee = selectedEmployee();
 
         if (selectedEmployee != null) {
-            new EmployeeFormController().displayEmployeeDialog(true, selectedEmployee, empDataService, false);
+            new EmployeeFormController().displayEmployeeDialog(Mode.UPDATE, selectedEmployee, empDataService);
         } else {
             AlertUtil.showNoSelectionAlert("Please select an employee record to update");
         }
@@ -130,7 +131,7 @@ public class EmployeeListController {
     private void setupViewRecordListener() {
         employeeTable.setOnMouseClicked((MouseEvent event) -> {
             if (event.getClickCount() == 2) {
-                new EmployeeFormController().displayEmployeeDialog(false, selectedEmployee(), empDataService, true);
+                new EmployeeFormController().displayEmployeeDialog(Mode.VIEW, selectedEmployee(), empDataService);
             }
         });
     }

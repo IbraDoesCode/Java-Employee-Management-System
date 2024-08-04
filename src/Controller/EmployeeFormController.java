@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.Employee;
+import Model.Mode;
 import Service.EmployeeDataService;
 import Util.AlertUtil;
 import javafx.collections.FXCollections;
@@ -65,7 +66,7 @@ public class EmployeeFormController {
     // Other Properties
     private EmployeeDataService empDataService;
     private Employee employee;
-    private boolean updateMode = false;
+    private Mode mode;
     private TextField[] textFields;
 
     @FXML
@@ -86,8 +87,16 @@ public class EmployeeFormController {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
-        updateMode = true;
         populateFields();
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+
+        if (mode == Mode.VIEW) {
+            disableInputFields();
+        }
+
     }
 
     public void setEmployeeDataService(EmployeeDataService empDataService) {
@@ -105,9 +114,9 @@ public class EmployeeFormController {
             if (AlertUtil.confirmDetails()) {
                 String[] record = retrieveInputAsStringArray();
 
-                if (updateMode) {
+                if (mode == Mode.UPDATE) {
                     empDataService.updateEmployeeRecord(record);
-                } else {
+                } else if (mode == Mode.ADD) {
                     empDataService.addEmployeeRecord(record);
                 }
             }
@@ -116,32 +125,31 @@ public class EmployeeFormController {
         }
     }
 
-    public void displayEmployeeDialog(boolean updateMode, Employee employee, EmployeeDataService empDataService, boolean showOnly) {
+    public void displayEmployeeDialog(Mode mode, Employee employee, EmployeeDataService empDataService) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeForm.fxml"));
             DialogPane empDetailsDialogPane = loader.load();
 
             EmployeeFormController controller = loader.getController();
             controller.setEmployeeDataService(empDataService);
-            controller.setEmployeeID();
+            controller.setMode(mode);
 
-            if (updateMode) {
-                controller.setEmployee(employee);
-            } else if (employee != null) {
+            if (employee != null) {
                 controller.setEmployee(employee);
             }
 
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(empDetailsDialogPane);
 
-            if (showOnly) {
+            if (mode == Mode.VIEW) {
                 empDetailsDialogPane.lookupButton(ButtonType.OK).setVisible(false);
                 empDetailsDialogPane.lookupButton(ButtonType.CANCEL).setVisible(false);
-                controller.disableInputFields();
+            } else if (mode == Mode.ADD) {
+                controller.generateNewEmployeeId();
             }
 
             Optional<ButtonType> clickedButton = dialog.showAndWait();
-            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK && !showOnly) {
+            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
                 controller.handleSaveRecord();
             }
 
@@ -207,7 +215,7 @@ public class EmployeeFormController {
         statusComboBox.setValue(employee.getStatus());
     }
 
-    private void setEmployeeID() {
+    private void generateNewEmployeeId() {
         employeeIDTextField.setText(String.valueOf(empDataService.getNewEmployeeID()));
     }
 
