@@ -127,7 +127,8 @@ public class EmployeeDataService {
                 Double.parseDouble(employeeData[16]),
                 Double.parseDouble(employeeData[17]),
                 Double.parseDouble(employeeData[18]),
-                Double.parseDouble(employeeData[20])
+                Double.parseDouble(employeeData[19])
         );
     }
+
 }
