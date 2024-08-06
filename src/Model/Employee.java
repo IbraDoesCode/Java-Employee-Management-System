@@ -25,10 +25,10 @@ public class Employee {
     private final double clothingAllowance;
     private final double hourlyRate;
 
-    public Employee(int employeeID, String lastName, String firstName, LocalDate birthday, String address,
-    String phoneNumber, LocalDate hireDate, String sssNumber, String philhealthNumber, String tinNumber, String pagibigNumber,
-    String status, String position, String department, String immediateSupervisor, double basicSalary,
-    double riceSubsidy, double phoneAllowance, double clothingAllowance, double hourlyRate) {
+    public Employee(int employeeID, String lastName, String firstName, LocalDate birthday, String address, String phoneNumber,
+                    LocalDate hireDate, String sssNumber, String philhealthNumber, String tinNumber, String pagibigNumber,
+                    String status, String position, String department, String immediateSupervisor,
+                    double basicSalary, double riceSubsidy, double phoneAllowance, double clothingAllowance, double hourlyRate) {
         this.employeeID = employeeID;
         this.lastName = lastName;
         this.firstName = firstName;

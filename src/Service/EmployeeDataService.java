@@ -15,7 +15,7 @@ import java.util.List;
 public class EmployeeDataService {
 
     private static final String EMPLOYEE_DATA_FILE = "Data/employeeData.csv";
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 
     private final CsvHandler csvHandler;
     private final List<String[]> employeeData;

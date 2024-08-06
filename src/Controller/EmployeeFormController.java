@@ -18,7 +18,7 @@ import java.util.Optional;
 public class EmployeeFormController {
 
     // Constants
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM-dd-yyyy");
     private static final String[] DEPARTMENTS = {"Human Resources", "Payroll", "Information Technology", "Accounting", "Corporate", "Customer Service", "Logistics", "Sales"};
     private static final String[] STATUSES = {"Regular", "Part-time", "Probationary", "Intern", "Resigned"};
 

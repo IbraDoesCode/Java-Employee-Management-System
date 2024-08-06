@@ -132,7 +132,7 @@
             <Insets left="10.0" />
          </padding>
       </Label>
-      <TextField fx:id="taxableIncomeTextField" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+      <TextField fx:id="taxableIncomeTextField" editable="false" GridPane.columnIndex="5" GridPane.rowIndex="6" />
    </GridPane>
    <Line endX="679.0" layoutX="115.0" layoutY="93.0" startX="-100.0" />
 </AnchorPane>
