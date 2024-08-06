@@ -18,21 +18,20 @@ public class EmployeeDataService {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("M/d/yyyy");
 
     private final CsvHandler csvHandler;
-    private final String[] HEADERS;
     private final List<String[]> employeeData;
     private final ObservableList<Employee> employeeObservableList;
 
     public EmployeeDataService() {
         this.csvHandler = new CsvHandler(EMPLOYEE_DATA_FILE);
-        employeeData = csvHandler.retrieveCsvData(true);
-        HEADERS = csvHandler.retrieveFieldNames();
+        employeeData = csvHandler.retrieveCsvData();
         employeeObservableList = FXCollections.observableArrayList(getAllEmployees());
     }
 
     public List<Employee> getAllEmployees() {
         List<Employee> employees = new ArrayList<>();
 
-        for (String[] row : employeeData) {
+        for (int i = 1; i < employeeData.size(); i++) {
+            String[] row = employeeData.get(i);
             employees.add(convertArrayToEmployee(row));
         }
         return employees;
@@ -47,7 +46,8 @@ public class EmployeeDataService {
     }
 
     public boolean recordExists(String[] record, int currentEmpId) {
-        for (String[] row : employeeData) {
+        for (int i = 1; i < employeeData.size(); i++) {
+            String[] row = employeeData.get(i);
             if (Integer.parseInt(row[0]) != currentEmpId && // EmployeeID
                 (record[4].equals(row[4]) || // address
                 record[5].equals(row[5]) || // phone number
@@ -71,7 +71,7 @@ public class EmployeeDataService {
         employeeData.add(record);
         employeeObservableList.add(convertArrayToEmployee(record));
 
-        csvHandler.writeDataToCsv(employeeData, HEADERS);
+        csvHandler.appendDataToCsv(record);
         AlertUtil.showRecordSavedAlert();
         System.out.println("Record saved");
     }
@@ -83,25 +83,24 @@ public class EmployeeDataService {
             return;
         }
 
-        for (int i = 0; i < employeeData.size(); i++) {
+        for (int i = 1; i < employeeData.size(); i++) {
             String[] row = employeeData.get(i);
             if (row[0].equals(record[0])) {
                 employeeData.set(i, record);
-                employeeObservableList.set(i, convertArrayToEmployee(record));
+                employeeObservableList.set(i - 1, convertArrayToEmployee(record));
                 break;
             }
         }
-        csvHandler.writeDataToCsv(employeeData, HEADERS);
+        csvHandler.writeDataToCsv(employeeData);
         AlertUtil.showRecordUpdatedAlert();
         System.out.println("Record Updated");
     }
 
     public void deleteEmployeeRecord(int employeeId) {
-
         employeeData.removeIf(record -> record[0].equals(String.valueOf(employeeId)));
         employeeObservableList.removeIf(employee -> employee.getEmployeeID() == employeeId);
 
-        csvHandler.writeDataToCsv(employeeData, HEADERS);
+        csvHandler.writeDataToCsv(employeeData);
         AlertUtil.showRecordDeletedAlert();
         System.out.println("Record deleted");
     }
@@ -130,5 +129,4 @@ public class EmployeeDataService {
                 Double.parseDouble(employeeData[19])
         );
     }
-
 }

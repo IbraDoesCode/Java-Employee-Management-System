@@ -15,13 +15,14 @@ public class UserCredentialService {
 
     public UserCredentialService() {
         this.csvHandler = new CsvHandler(USER_CREDENTIAL_FILE);
-        userCredentialData = csvHandler.retrieveCsvData(true);
+        userCredentialData = csvHandler.retrieveCsvData();
     }
 
     private List<User> retrieveListOfUserObject() {
         List<User> userCredentials = new ArrayList<>();
 
-        for (String[] row : userCredentialData) {
+        for (int i = 1; i < userCredentialData.size(); i++) {
+            String[] row = userCredentialData.get(i);
             userCredentials.add(new User(Integer.parseInt(row[0]), row[1], row[2], row[3], row[4]));
         }
         return userCredentials;
