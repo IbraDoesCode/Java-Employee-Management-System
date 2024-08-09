@@ -6,23 +6,23 @@ public class User {
     private final int employeeID;
     private final String username;
     private final String password;
-    private final String last_name;
-    private final String first_name;
-    
-    
-    public User(int employeeID, String username, String password, String last_name, String first_name) {
+    private final String lastName;
+    private final String firstName;
+
+    public User(int employeeID, String username, String password, String lastName, String firstName) {
         this.employeeID = employeeID;
         this.username = username;
         this.password = password;
-        this.last_name = last_name;
-        this.first_name = first_name;
+        this.lastName = lastName;
+        this.firstName = firstName;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public boolean isValidCredentials(String username, String password) {
-        return this.username.equals(username) && this.password.equals(password);
+    public String getPassword() {
+        return password;
     }
+
 }
