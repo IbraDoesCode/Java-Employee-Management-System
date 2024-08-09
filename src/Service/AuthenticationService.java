@@ -1,10 +1,6 @@
 package Service;
 
 import Model.User;
-import com.opencsv.exceptions.CsvException;
-
-import java.io.IOException;
-
 
 public class AuthenticationService {
 
@@ -14,8 +10,13 @@ public class AuthenticationService {
         this.userCredentialService = new UserCredentialService();
     }
 
-    public boolean authenticate(String username, String password) throws IOException, CsvException {
+    public boolean authenticate(String username, String password) {
         User user = userCredentialService.retrieveUserCredentialByUsername(username);
-        return user != null && user.isValidCredentials(username, password);
+        return user != null && checkPassword(user, password);
     }
+
+    public boolean checkPassword(User user, String password) {
+        return user.getPassword().equals(password);
+    }
+
 }
