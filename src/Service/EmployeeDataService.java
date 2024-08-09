@@ -62,7 +62,6 @@ public class EmployeeDataService {
     }
 
     public void addEmployeeRecord(String[] record) {
-
         if (recordExists(record, -1)) {
             AlertUtil.showDuplicateRecordExists();
             return;
@@ -77,7 +76,6 @@ public class EmployeeDataService {
     }
 
     public void updateEmployeeRecord(String[] record) {
-
         if (recordExists(record, Integer.parseInt(record[0]))) {
             AlertUtil.showDuplicateRecordExists();
             return;
