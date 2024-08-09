@@ -18,7 +18,7 @@ public class UserCredentialService {
         userCredentialData = csvHandler.retrieveCsvData();
     }
 
-    private List<User> retrieveListOfUserObject() {
+    private List<User> getAllUsers() {
         List<User> userCredentials = new ArrayList<>();
 
         for (int i = 1; i < userCredentialData.size(); i++) {
@@ -29,7 +29,7 @@ public class UserCredentialService {
     }
 
     public User retrieveUserCredentialByUsername(String username)  {
-        for (User user : retrieveListOfUserObject()) {
+        for (User user : getAllUsers()) {
             if (user.getUsername().equals(username)) {
                 return user;
             }
