@@ -2,7 +2,6 @@ package Controller;
 
 import Service.AuthenticationService;
 import Util.AlertUtil;
-import com.opencsv.exceptions.CsvException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -41,7 +40,6 @@ public class LoginController {
         String password = passwordField.getText();
 
         try {
-
             if (username.isEmpty() || password.isEmpty()) {
                 AlertUtil.showMissingCredentialAlert();
                 return;
@@ -56,7 +54,7 @@ public class LoginController {
             new EmployeeListController().displayMainStage();
             closeStage();
 
-        } catch (IOException | CsvException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
