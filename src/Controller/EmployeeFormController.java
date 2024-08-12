@@ -194,25 +194,25 @@ public class EmployeeFormController {
     }
 
     private void populateFields() {
-        employeeIDTextField.setText(String.valueOf(employee.getEmployeeID()));
-        firstNameTextField.setText(employee.getFirstName());
-        lastNameTextField.setText(employee.getLastName());
-        phoneNoTextField.setText(employee.getPhoneNumber());
-        addressTextField.setText(employee.getAddress());
-        positionTextField.setText(employee.getPosition());
-        supervisorTextField.setText(employee.getImmediateSupervisor());
-        tinNoTextField.setText(employee.getTinNumber());
-        sssNoTextField.setText(employee.getSssNumber());
-        philhealthNoTextField.setText(employee.getPhilhealthNumber());
-        pagibigNoTextField.setText(employee.getPagibigNumber());
-        basicSalaryTextField.setText(String.valueOf(employee.getBasicSalary()));
-        riceTextField.setText(String.valueOf(employee.getRiceSubsidy()));
-        clothingTextField.setText(String.valueOf(employee.getClothingAllowance()));
-        phoneTextField.setText(String.valueOf(employee.getPhoneAllowance()));
-        dobDatePicker.setValue(employee.getBirthday());
-        hireDatePicker.setValue(employee.getHireDate());
-        departmentComboBox.setValue(employee.getDepartment());
-        statusComboBox.setValue(employee.getStatus());
+        employeeIDTextField.setText(String.valueOf(employee.getEmployeeId()));
+        firstNameTextField.setText(employee.getPersonalInfo().getFirstName());
+        lastNameTextField.setText(employee.getPersonalInfo().getLastName());
+        phoneNoTextField.setText(employee.getPersonalInfo().getPhoneNumber());
+        addressTextField.setText(employee.getPersonalInfo().getAddress());
+        positionTextField.setText(employee.getEmploymentInfo().getPosition());
+        supervisorTextField.setText(employee.getEmploymentInfo().getImmediateSupervisor());
+        tinNoTextField.setText(employee.getGovernmentIds().getPagibigNumber());
+        sssNoTextField.setText(employee.getGovernmentIds().getSssNumber());
+        philhealthNoTextField.setText(employee.getGovernmentIds().getPhilhealthNumber());
+        pagibigNoTextField.setText(employee.getGovernmentIds().getPagibigNumber());
+        basicSalaryTextField.setText(String.valueOf(employee.getPayrollInfo().getBasicSalary()));
+        riceTextField.setText(String.valueOf(employee.getPayrollInfo().getRiceSubsidy()));
+        clothingTextField.setText(String.valueOf(employee.getPayrollInfo().getClothingAllowance()));
+        phoneTextField.setText(String.valueOf(employee.getPayrollInfo().getPhoneAllowance()));
+        dobDatePicker.setValue(employee.getPersonalInfo().getBirthday());
+        hireDatePicker.setValue(employee.getEmploymentInfo().getHireDate());
+        departmentComboBox.setValue(employee.getEmploymentInfo().getDepartment());
+        statusComboBox.setValue(employee.getEmploymentInfo().getStatus());
     }
 
     private void generateNewEmployeeId() {

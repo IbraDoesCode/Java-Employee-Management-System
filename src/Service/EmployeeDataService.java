@@ -1,6 +1,6 @@
 package Service;
 
-import Model.Employee;
+import Model.*;
 import Util.AlertUtil;
 import Util.CsvHandler;
 import javafx.collections.FXCollections;
@@ -96,7 +96,7 @@ public class EmployeeDataService {
 
     public void deleteEmployeeRecord(int employeeId) {
         employeeData.removeIf(record -> record[0].equals(String.valueOf(employeeId)));
-        employeeObservableList.removeIf(employee -> employee.getEmployeeID() == employeeId);
+        employeeObservableList.removeIf(employee -> employee.getEmployeeId() == employeeId);
 
         csvHandler.writeDataToCsv(employeeData);
         AlertUtil.showRecordDeletedAlert();
@@ -104,27 +104,26 @@ public class EmployeeDataService {
     }
 
     public Employee convertArrayToEmployee(String[] employeeData) {
-        return new Employee(
-                Integer.parseInt(employeeData[0]),
-                employeeData[1],
-                employeeData[2],
-                LocalDate.parse(employeeData[3], DATE_FORMAT),
-                employeeData[4],
-                employeeData[5],
-                LocalDate.parse(employeeData[6], DATE_FORMAT),
-                employeeData[7],
-                employeeData[8],
-                employeeData[9],
-                employeeData[10],
-                employeeData[11],
-                employeeData[12],
-                employeeData[13],
-                employeeData[14],
-                Double.parseDouble(employeeData[15]),
-                Double.parseDouble(employeeData[16]),
-                Double.parseDouble(employeeData[17]),
-                Double.parseDouble(employeeData[18]),
-                Double.parseDouble(employeeData[19])
-        );
+        return new Employee(Integer.parseInt(employeeData[0]),
+                new PersonalInfo(
+                        employeeData[1],
+                        employeeData[2],
+                        LocalDate.parse(employeeData[3], DATE_FORMAT),
+                        employeeData[4],
+                        employeeData[5]),
+                new EmploymentInfo(LocalDate.parse(employeeData[6], DATE_FORMAT),
+                        employeeData[12],
+                        employeeData[13],
+                        employeeData[14],
+                        employeeData[11]),
+                new GovernmentIds(employeeData[7],
+                        employeeData[8],
+                        employeeData[9],
+                        employeeData[10]),
+                new PayrollInfo(Double.parseDouble(employeeData[15]),
+                        Double.parseDouble(employeeData[16]),
+                        Double.parseDouble(employeeData[17]),
+                        Double.parseDouble(employeeData[18]),
+                        Double.parseDouble(employeeData[19])));
     }
 }

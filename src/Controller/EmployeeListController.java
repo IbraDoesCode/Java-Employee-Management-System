@@ -4,6 +4,8 @@ import Model.Employee;
 import Model.Mode;
 import Service.EmployeeDataService;
 import Util.AlertUtil;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -28,19 +30,19 @@ public class EmployeeListController {
     @FXML
     private TableView<Employee> employeeTable;
     @FXML
-    private TableColumn<Employee, Integer> employeeIdColumn;
+    private TableColumn<Employee, String> employeeIdColumn;
     @FXML
-    private TableColumn<Employee, Integer> firstNameColumn;
+    private TableColumn<Employee, String> firstNameColumn;
     @FXML
-    private TableColumn<Employee, Integer> lastNameColumn;
+    private TableColumn<Employee, String> lastNameColumn;
     @FXML
-    private TableColumn<Employee, Integer> tinNoColumn;
+    private TableColumn<Employee, String> tinNoColumn;
     @FXML
-    private TableColumn<Employee,Integer> sssNoColumn;
+    private TableColumn<Employee, String> sssNoColumn;
     @FXML
-    private TableColumn<Employee,Integer> philhealthNoColumn;
+    private TableColumn<Employee, String> philhealthNoColumn;
     @FXML
-    private TableColumn<Employee,Integer> pagibigNoColumn;
+    private TableColumn<Employee, String> pagibigNoColumn;
 
     private final EmployeeDataService empDataService;
     private final ObservableList<Employee> employeeObservableList;
@@ -95,7 +97,7 @@ public class EmployeeListController {
         boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Deletion", "Are you sure you want to delete this employee record? This action cannot be undone.");
 
         if (confirmed) {
-            empDataService.deleteEmployeeRecord(selectedEmployee.getEmployeeID());
+            empDataService.deleteEmployeeRecord(selectedEmployee.getEmployeeId());
         }
     }
 
@@ -149,19 +151,19 @@ public class EmployeeListController {
 
                 String searchKeyword = newValue.toLowerCase();
 
-                if (String.valueOf(employee.getEmployeeID()).equals(searchKeyword)) {
+                if (String.valueOf(employee.getEmployeeId()).equals(searchKeyword)) {
                     return true;
-                } else if (employee.getLastName().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.getPersonalInfo().getLastName().toLowerCase().contains(searchKeyword)) {
                     return true;
-                }else if (employee.getFirstName().toLowerCase().contains(searchKeyword)) {
+                }else if (employee.getPersonalInfo().getFirstName().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getTinNumber().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.getGovernmentIds().getTinNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getSssNumber().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.getGovernmentIds().getSssNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getPagibigNumber().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.getGovernmentIds().getPagibigNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else return employee.getPhilhealthNumber().toLowerCase().contains(searchKeyword);
+                } else return employee.getGovernmentIds().getPhilhealthNumber().toLowerCase().contains(searchKeyword);
 
             });
 
@@ -182,13 +184,26 @@ public class EmployeeListController {
 
     private void initializeTableColumns() {
 
-        employeeIdColumn.setCellValueFactory(new PropertyValueFactory<>("employeeID"));
-        firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        tinNoColumn.setCellValueFactory(new PropertyValueFactory<>("tinNumber"));
-        sssNoColumn.setCellValueFactory(new PropertyValueFactory<>("sssNumber"));
-        philhealthNoColumn.setCellValueFactory(new PropertyValueFactory<>("philhealthNumber"));
-        pagibigNoColumn.setCellValueFactory(new PropertyValueFactory<>("pagibigNumber"));
+        employeeIdColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(String.valueOf(cellData.getValue().getEmployeeId())));
+
+        firstNameColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getPersonalInfo().getFirstName()));
+
+        lastNameColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getPersonalInfo().getLastName()));
+
+        tinNoColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getGovernmentIds().getTinNumber()));
+
+        sssNoColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getGovernmentIds().getSssNumber()));
+
+        philhealthNoColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getGovernmentIds().getPhilhealthNumber()));
+
+        pagibigNoColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getGovernmentIds().getPagibigNumber()));
 
         bindTableColumnsToTableViewWidth();
     }

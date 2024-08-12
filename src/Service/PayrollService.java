@@ -20,9 +20,6 @@ public class PayrollService {
 
     private static final TreeMap<Double, Double> sssContributionTable = initializeSssTable();
 
-    // Properties
-    private final Employee employee;
-    
     private final double hourlyRate;
 
     private final double riceSubsidy;
@@ -37,11 +34,11 @@ public class PayrollService {
 
     public PayrollService(Employee employee, Double hoursWorked, double overTimeHours) {
 
-        this.employee = employee;
-        this.hourlyRate = employee.getHourlyRate();
-        this.riceSubsidy = employee.getRiceSubsidy();
-        this.clothingAllowance = employee.getClothingAllowance();
-        this.phoneAllowance = employee.getPhoneAllowance();
+        // Properties
+        this.hourlyRate = employee.getPayrollInfo().getHourlyRate();
+        this.riceSubsidy = employee.getPayrollInfo().getRiceSubsidy();
+        this.clothingAllowance = employee.getPayrollInfo().getClothingAllowance();
+        this.phoneAllowance = employee.getPayrollInfo().getPhoneAllowance();
         this.hoursWorked = hoursWorked;
         this.overTimeHours = overTimeHours;
 
