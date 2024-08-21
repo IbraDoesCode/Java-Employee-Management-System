@@ -1,7 +1,7 @@
-package Controller;
+package controller;
 
-import Service.AuthenticationService;
-import Util.AlertUtil;
+import service.AuthenticationService;
+import util.AlertUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,7 +26,7 @@ public class LoginController {
     }
 
     public void displayLoginStage() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("MotorPH Login Portal");
@@ -51,7 +51,7 @@ public class LoginController {
             }
 
             AlertUtil.showSuccessfulLoginAlert();
-            new EmployeeListController().displayMainStage();
+            new EmployeeTableController().displayMainStage();
             closeStage();
 
         } catch (IOException e) {

@@ -1,8 +1,8 @@
-package Service;
+package service;
 
-import Model.*;
-import Util.AlertUtil;
-import Util.CsvHandler;
+import model.*;
+import util.AlertUtil;
+import util.CsvHandler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

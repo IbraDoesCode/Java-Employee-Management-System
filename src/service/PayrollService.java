@@ -1,6 +1,6 @@
-package Service;
+package service;
 
-import Model.Employee;
+import model.Employee;
 
 import java.util.Map;
 import java.util.TreeMap;

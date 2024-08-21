@@ -1,7 +1,7 @@
-package Controller;
+package controller;
 
-import Model.Employee;
-import Service.PayrollService;
+import model.Employee;
+import service.PayrollService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -61,7 +61,7 @@ public class PayrollController {
     }
 
     public void displayPayrollStage(Employee employee) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Payroll.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Payroll.fxml"));
         Parent root = loader.load();
 
         PayrollController controller = loader.getController();

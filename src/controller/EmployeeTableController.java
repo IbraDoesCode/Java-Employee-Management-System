@@ -1,10 +1,9 @@
-package Controller;
+package controller;
 
-import Model.Employee;
-import Model.Mode;
-import Service.EmployeeDataService;
-import Util.AlertUtil;
-import javafx.beans.property.SimpleIntegerProperty;
+import model.Employee;
+import model.Mode;
+import service.EmployeeDataService;
+import util.AlertUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -16,14 +15,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 
-public class EmployeeListController {
+public class EmployeeTableController {
 
     @FXML
     private TextField searchTextField;
@@ -47,7 +45,7 @@ public class EmployeeListController {
     private final EmployeeDataService empDataService;
     private final ObservableList<Employee> employeeObservableList;
 
-    public EmployeeListController() {
+    public EmployeeTableController() {
         empDataService = new EmployeeDataService();
         employeeObservableList = empDataService.getEmployeeObservableList();
     }
@@ -61,7 +59,7 @@ public class EmployeeListController {
     }
 
     public void displayMainStage() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeList.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EmployeeTable.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle("MotorPH HR System");

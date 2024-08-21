@@ -1,9 +1,9 @@
-package Controller;
+package controller;
 
-import Model.Employee;
-import Model.Mode;
-import Service.EmployeeDataService;
-import Util.AlertUtil;
+import model.Employee;
+import model.Mode;
+import service.EmployeeDataService;
+import util.AlertUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,7 +57,6 @@ public class EmployeeFormController {
     private DatePicker dobDatePicker;
     @FXML
     private DatePicker hireDatePicker;
-
     @FXML
     private ComboBox<String> departmentComboBox;
     @FXML
@@ -127,7 +126,7 @@ public class EmployeeFormController {
 
     public void displayEmployeeDialog(Mode mode, Employee employee, EmployeeDataService empDataService) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/EmployeeForm.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EmployeeForm.fxml"));
             DialogPane empDetailsDialogPane = loader.load();
 
             EmployeeFormController controller = loader.getController();
@@ -145,11 +144,11 @@ public class EmployeeFormController {
                 empDetailsDialogPane.lookupButton(ButtonType.OK).setVisible(false);
                 empDetailsDialogPane.lookupButton(ButtonType.CANCEL).setVisible(false);
             } else if (mode == Mode.ADD) {
-                controller.generateNewEmployeeId();
+                controller.populateNewEmpId();
             }
 
             Optional<ButtonType> clickedButton = dialog.showAndWait();
-            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
+            if (clickedButton.get() == ButtonType.OK) {
                 controller.handleSaveRecord();
             }
 
@@ -215,7 +214,7 @@ public class EmployeeFormController {
         statusComboBox.setValue(employee.getEmploymentInfo().getStatus());
     }
 
-    private void generateNewEmployeeId() {
+    private void populateNewEmpId() {
         employeeIDTextField.setText(String.valueOf(empDataService.getNewEmployeeID()));
     }
 

@@ -1,7 +1,7 @@
-package Service;
+package service;
 
-import Util.CsvHandler;
-import Model.User;
+import util.CsvHandler;
+import model.User;
 import java.util.ArrayList;
 import java.util.List;
 

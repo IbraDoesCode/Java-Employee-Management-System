@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 
 public class User {
@@ -25,4 +25,15 @@ public class User {
         return password;
     }
 
+    public int getEmployeeID() {
+        return employeeID;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
 }
