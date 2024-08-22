@@ -200,7 +200,7 @@ public class EmployeeFormController {
         addressTextField.setText(employee.getPersonalInfo().getAddress());
         positionTextField.setText(employee.getEmploymentInfo().getPosition());
         supervisorTextField.setText(employee.getEmploymentInfo().getImmediateSupervisor());
-        tinNoTextField.setText(employee.getGovernmentIds().getPagibigNumber());
+        tinNoTextField.setText(employee.getGovernmentIds().getTinNumber());
         sssNoTextField.setText(employee.getGovernmentIds().getSssNumber());
         philhealthNoTextField.setText(employee.getGovernmentIds().getPhilhealthNumber());
         pagibigNoTextField.setText(employee.getGovernmentIds().getPagibigNumber());

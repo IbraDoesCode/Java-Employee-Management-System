@@ -14,7 +14,6 @@ import java.util.List;
 
 public class EmployeeDataService {
 
-    private static final String EMPLOYEE_DATA_FILE = "Data/employeeData.csv";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 
     private final CsvHandler csvHandler;
@@ -22,7 +21,7 @@ public class EmployeeDataService {
     private final ObservableList<Employee> employeeObservableList;
 
     public EmployeeDataService() {
-        this.csvHandler = new CsvHandler(EMPLOYEE_DATA_FILE);
+        this.csvHandler = new CsvHandler("src/database/employeeData.csv");
         employeeData = csvHandler.retrieveCsvData();
         employeeObservableList = FXCollections.observableArrayList(getAllEmployees());
     }

@@ -8,13 +8,10 @@ import java.util.List;
 
 public class UserCredentialService {
 
-    private final String USER_CREDENTIAL_FILE = "Data/userCredentials.csv";
-
-    private final CsvHandler csvHandler;
     private final List<String[]> userCredentialData;
 
     public UserCredentialService() {
-        this.csvHandler = new CsvHandler(USER_CREDENTIAL_FILE);
+        CsvHandler csvHandler = new CsvHandler("src/database/userCredentials.csv");
         userCredentialData = csvHandler.retrieveCsvData();
     }
 

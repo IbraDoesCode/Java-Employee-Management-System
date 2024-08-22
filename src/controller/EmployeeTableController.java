@@ -9,9 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -42,29 +39,17 @@ public class EmployeeTableController {
     @FXML
     private TableColumn<Employee, String> pagibigNoColumn;
 
-    private final EmployeeDataService empDataService;
-    private final ObservableList<Employee> employeeObservableList;
-
-    public EmployeeTableController() {
-        empDataService = new EmployeeDataService();
-        employeeObservableList = empDataService.getEmployeeObservableList();
-    }
+    private EmployeeDataService empDataService;
+    private ObservableList<Employee> employeeObservableList;
 
     @FXML
     public void initialize() {
+        empDataService = new EmployeeDataService();
+        employeeObservableList = empDataService.getEmployeeObservableList();
         initializeTableColumns();
         setDataToEmployeeTable();
         setupViewRecordListener();
         setupSearchListener();
-    }
-
-    public void displayMainStage() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EmployeeTable.fxml"));
-        Parent root = loader.load();
-        Stage stage = new Stage();
-        stage.setTitle("MotorPH HR System");
-        stage.setScene(new Scene(root));
-        stage.show();
     }
 
     @FXML
@@ -117,14 +102,9 @@ public class EmployeeTableController {
     @FXML
     public void handleLogout() {
 
-        try {
-            boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Logout", "Are you sure you want to log out?");
-            if (confirmed) {
-                new LoginController().displayLoginStage();
-                closeStage();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Logout", "Are you sure you want to log out?");
+        if (confirmed) {
+            closeStage();
         }
     }
 
@@ -153,7 +133,7 @@ public class EmployeeTableController {
                     return true;
                 } else if (employee.getPersonalInfo().getLastName().toLowerCase().contains(searchKeyword)) {
                     return true;
-                }else if (employee.getPersonalInfo().getFirstName().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.getPersonalInfo().getFirstName().toLowerCase().contains(searchKeyword)) {
                     return true;
                 } else if (employee.getGovernmentIds().getTinNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
