@@ -25,7 +25,7 @@ public class UserCredentialService {
         return userCredentials;
     }
 
-    public User retrieveUserCredentialByUsername(String username)  {
+    public User getUserByUsername(String username)  {
         for (User user : getAllUsers()) {
             if (user.getUsername().equals(username)) {
                 return user;
