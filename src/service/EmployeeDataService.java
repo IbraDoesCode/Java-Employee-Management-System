@@ -18,12 +18,12 @@ public class EmployeeDataService {
 
     private final CsvHandler csvHandler;
     private final List<String[]> employeeData;
-    private final ObservableList<Employee> employeeObservableList;
+    private final ObservableList<Employee> employeeList;
 
     public EmployeeDataService() {
         this.csvHandler = new CsvHandler("src/database/employeeData.csv");
         employeeData = csvHandler.retrieveCsvData();
-        employeeObservableList = FXCollections.observableArrayList(getAllEmployees());
+        employeeList = FXCollections.observableArrayList(getAllEmployees());
     }
 
     public List<Employee> getAllEmployees() {
@@ -36,8 +36,8 @@ public class EmployeeDataService {
         return employees;
     }
 
-    public ObservableList<Employee> getEmployeeObservableList() {
-        return employeeObservableList;
+    public ObservableList<Employee> getEmployeeList() {
+        return employeeList;
     }
 
     public int getNewEmployeeID() {
@@ -67,7 +67,7 @@ public class EmployeeDataService {
         }
 
         employeeData.add(record);
-        employeeObservableList.add(convertArrayToEmployee(record));
+        employeeList.add(convertArrayToEmployee(record));
 
         csvHandler.appendDataToCsv(record);
         AlertUtil.showRecordSavedAlert();
@@ -84,7 +84,7 @@ public class EmployeeDataService {
             String[] row = employeeData.get(i);
             if (row[0].equals(record[0])) {
                 employeeData.set(i, record);
-                employeeObservableList.set(i - 1, convertArrayToEmployee(record));
+                employeeList.set(i - 1, convertArrayToEmployee(record));
                 break;
             }
         }
@@ -95,7 +95,7 @@ public class EmployeeDataService {
 
     public void deleteEmployeeRecord(int employeeId) {
         employeeData.removeIf(record -> record[0].equals(String.valueOf(employeeId)));
-        employeeObservableList.removeIf(employee -> employee.getEmployeeId() == employeeId);
+        employeeList.removeIf(employee -> employee.getEmployeeId() == employeeId);
 
         csvHandler.writeDataToCsv(employeeData);
         AlertUtil.showRecordDeletedAlert();
