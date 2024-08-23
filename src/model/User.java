@@ -1,6 +1,8 @@
 package model;
 
 
+import service.EmployeeDataService;
+
 public class User {
 
     private final int employeeID;
@@ -8,6 +10,7 @@ public class User {
     private final String password;
     private final String lastName;
     private final String firstName;
+    private final EmployeeDataService empDataService;
 
     public User(int employeeID, String username, String password, String lastName, String firstName) {
         this.employeeID = employeeID;
@@ -15,6 +18,7 @@ public class User {
         this.password = password;
         this.lastName = lastName;
         this.firstName = firstName;
+        this.empDataService = new EmployeeDataService();
     }
 
     public String getUsername() {
@@ -25,15 +29,20 @@ public class User {
         return password;
     }
 
-    public int getEmployeeID() {
-        return employeeID;
+    public EmployeeDataService getEmpDataService() {
+        return empDataService;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void addEmployee(String[] record) {
+        empDataService.addEmployeeRecord(record);
     }
 
-    public String getFirstName() {
-        return firstName;
+    public void updateEmployee(String[] record) {
+        empDataService.updateEmployeeRecord(record);
     }
+
+    public void deleteEmployee(int employeeId) {
+        empDataService.deleteEmployeeRecord(employeeId);
+    }
+
 }

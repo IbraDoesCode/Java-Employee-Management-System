@@ -1,21 +1,21 @@
 package controller;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import model.Employee;
 import model.Mode;
-import service.EmployeeDataService;
+import model.User;
 import util.AlertUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 
 public class EmployeeTableController {
@@ -39,22 +39,25 @@ public class EmployeeTableController {
     @FXML
     private TableColumn<Employee, String> pagibigNoColumn;
 
-    private EmployeeDataService empDataService;
+    private User user;
     private ObservableList<Employee> employeeObservableList;
 
     @FXML
     public void initialize() {
-        empDataService = new EmployeeDataService();
-        employeeObservableList = empDataService.getEmployeeObservableList();
         initializeTableColumns();
-        setDataToEmployeeTable();
         setupViewRecordListener();
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        employeeObservableList = user.getEmpDataService().getEmployeeObservableList();
+        setDataToEmployeeTable();
         setupSearchListener();
     }
 
     @FXML
     public void handleAddNewRecord() {
-        new EmployeeFormController().displayEmployeeDialog(Mode.ADD, null, empDataService);
+        initializeEmployeeForm(user, Mode.ADD, null);
     }
 
     @FXML
@@ -62,7 +65,7 @@ public class EmployeeTableController {
         Employee selectedEmployee = selectedEmployee();
 
         if (selectedEmployee != null) {
-            new EmployeeFormController().displayEmployeeDialog(Mode.UPDATE, selectedEmployee, empDataService);
+            initializeEmployeeForm(user, Mode.UPDATE, selectedEmployee);
         } else {
             AlertUtil.showNoSelectionAlert("Please select an employee record to update");
         }
@@ -80,7 +83,7 @@ public class EmployeeTableController {
         boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Deletion", "Are you sure you want to delete this employee record? This action cannot be undone.");
 
         if (confirmed) {
-            empDataService.deleteEmployeeRecord(selectedEmployee.getEmployeeId());
+            user.deleteEmployee(selectedEmployee.getEmployeeId());
         }
     }
 
@@ -104,14 +107,15 @@ public class EmployeeTableController {
 
         boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Logout", "Are you sure you want to log out?");
         if (confirmed) {
-            closeStage();
+            closeMainUI();
         }
     }
 
     private void setupViewRecordListener() {
+        Employee employee = selectedEmployee();
         employeeTable.setOnMouseClicked((MouseEvent event) -> {
             if (event.getClickCount() == 2) {
-                new EmployeeFormController().displayEmployeeDialog(Mode.VIEW, selectedEmployee(), empDataService);
+                initializeEmployeeForm(user, Mode.VIEW, employee);
             }
         });
     }
@@ -155,7 +159,7 @@ public class EmployeeTableController {
 
     }
 
-    private void closeStage() {
+    private void closeMainUI() {
         Stage mainUI = (Stage) employeeTable.getScene().getWindow();
         mainUI.close();
     }
@@ -200,6 +204,38 @@ public class EmployeeTableController {
 
     private Employee selectedEmployee() {
         return employeeTable.getSelectionModel().getSelectedItem();
+    }
+
+    private void initializeEmployeeForm(User user, Mode mode, Employee employee) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/EmployeeForm.fxml"));
+            DialogPane empDetailsDialogPane = loader.load();
+
+            EmployeeFormController controller = loader.getController();
+            controller.setUser(user);
+            controller.setMode(mode);
+
+
+            if (employee != null) {
+                controller.setEmployee(employee);
+            }
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(empDetailsDialogPane);
+
+            if (mode == Mode.VIEW) {
+                empDetailsDialogPane.lookupButton(ButtonType.OK).setVisible(false);
+                empDetailsDialogPane.lookupButton(ButtonType.CANCEL).setVisible(false);
+            }
+
+            Optional<ButtonType> clickedButton = dialog.showAndWait();
+            if (clickedButton.get() == ButtonType.OK) {
+                controller.handleSaveRecord();
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
