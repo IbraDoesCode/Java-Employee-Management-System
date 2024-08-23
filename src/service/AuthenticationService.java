@@ -11,7 +11,7 @@ public class AuthenticationService {
     }
 
     public boolean authenticate(String username, String password) {
-        User user = userCredentialService.retrieveUserCredentialByUsername(username);
+        User user = userCredentialService.getUserByUsername(username);
         return user != null && checkPassword(user, password);
     }
 
