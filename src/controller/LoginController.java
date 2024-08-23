@@ -41,9 +41,8 @@ public class LoginController {
         AlertUtil.showSuccessfulLoginAlert();
         User user = new UserCredentialService().getUserByUsername(username);
         initializeMainUI(user);
+
         closeLoginUI();
-
-
     }
 
     private void initializeMainUI(User user) {
