@@ -24,23 +24,8 @@ public class EmployeeTableController {
     private TextField searchTextField;
     @FXML
     private TableView<Employee> employeeTable;
-    @FXML
-    private TableColumn<Employee, String> employeeIdColumn;
-    @FXML
-    private TableColumn<Employee, String> firstNameColumn;
-    @FXML
-    private TableColumn<Employee, String> lastNameColumn;
-    @FXML
-    private TableColumn<Employee, String> tinNoColumn;
-    @FXML
-    private TableColumn<Employee, String> sssNoColumn;
-    @FXML
-    private TableColumn<Employee, String> philhealthNoColumn;
-    @FXML
-    private TableColumn<Employee, String> pagibigNoColumn;
-
     private User user;
-    private ObservableList<Employee> employeeObservableList;
+    private ObservableList<Employee> employeeList;
 
     @FXML
     public void initialize() {
@@ -50,7 +35,7 @@ public class EmployeeTableController {
 
     public void setUser(User user) {
         this.user = user;
-        employeeObservableList = user.getEmpDataService().getEmployeeObservableList();
+        employeeList = user.getEmpDataService().getEmployeeList();
         setDataToEmployeeTable();
         setupSearchListener();
     }
@@ -89,7 +74,6 @@ public class EmployeeTableController {
 
     @FXML
     public void handleComputePayroll() {
-
         if (selectedEmployee() == null) {
             AlertUtil.showNoSelectionAlert("Please select an employee record to compute");
             return;
@@ -104,7 +88,6 @@ public class EmployeeTableController {
 
     @FXML
     public void handleLogout() {
-
         boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Logout", "Are you sure you want to log out?");
         if (confirmed) {
             closeMainUI();
@@ -112,8 +95,8 @@ public class EmployeeTableController {
     }
 
     private void setupViewRecordListener() {
-        Employee employee = selectedEmployee();
         employeeTable.setOnMouseClicked((MouseEvent event) -> {
+            Employee employee = selectedEmployee();
             if (event.getClickCount() == 2) {
                 initializeEmployeeForm(user, Mode.VIEW, employee);
             }
@@ -121,7 +104,7 @@ public class EmployeeTableController {
     }
 
     private void setupSearchListener() {
-        FilteredList<Employee> filteredData = new FilteredList<>(employeeObservableList, b -> true);
+        FilteredList<Employee> filteredData = new FilteredList<>(employeeList, _ -> true);
 
         searchTextField.textProperty().addListener(((_, _, newValue) -> {
 
@@ -156,7 +139,6 @@ public class EmployeeTableController {
         sortedData.comparatorProperty().bind(employeeTable.comparatorProperty());
 
         employeeTable.setItems(sortedData);
-
     }
 
     private void closeMainUI() {
@@ -165,41 +147,32 @@ public class EmployeeTableController {
     }
 
     private void initializeTableColumns() {
+        TableColumn<Employee, String> employeeIdColumn = new TableColumn<>("Employee #");
+        employeeIdColumn.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getEmployeeId())));
 
-        employeeIdColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(String.valueOf(cellData.getValue().getEmployeeId())));
+        TableColumn<Employee, String> firstNameColumn = new TableColumn<>("First Name");
+        firstNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPersonalInfo().getFirstName()));
 
-        firstNameColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getPersonalInfo().getFirstName()));
+        TableColumn<Employee, String> lastNameColumn = new TableColumn<>("Last Name");
+        lastNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPersonalInfo().getLastName()));
 
-        lastNameColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getPersonalInfo().getLastName()));
+        TableColumn<Employee, String> tinNoColumn = new TableColumn<>("Tin #");
+        tinNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGovernmentIds().getTinNumber()));
 
-        tinNoColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getGovernmentIds().getTinNumber()));
+        TableColumn<Employee, String> sssNoColumn = new TableColumn<>("SSS #");
+        sssNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGovernmentIds().getSssNumber()));
 
-        sssNoColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getGovernmentIds().getSssNumber()));
+        TableColumn<Employee, String> philhealthNoColumn = new TableColumn<>("Philhealth #");
+        philhealthNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGovernmentIds().getPhilhealthNumber()));
 
-        philhealthNoColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getGovernmentIds().getPhilhealthNumber()));
+        TableColumn<Employee, String> pagibigNoColumn = new TableColumn<>("Pagibig #");
+        pagibigNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGovernmentIds().getPagibigNumber()));
 
-        pagibigNoColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getGovernmentIds().getPagibigNumber()));
-
-        bindTableColumnsToTableViewWidth();
-    }
-
-    private void bindTableColumnsToTableViewWidth() {
-        double numOfColumns = employeeTable.getColumns().size();
-
-        for (TableColumn<Employee, ?> column : employeeTable.getColumns()) {
-            column.prefWidthProperty().bind(employeeTable.widthProperty().divide(numOfColumns));
-        }
+        employeeTable.getColumns().addAll(employeeIdColumn, firstNameColumn, lastNameColumn, tinNoColumn, sssNoColumn, philhealthNoColumn, pagibigNoColumn);
     }
 
     private void setDataToEmployeeTable() {
-        employeeTable.setItems(employeeObservableList);
+        employeeTable.setItems(employeeList);
     }
 
     private Employee selectedEmployee() {
