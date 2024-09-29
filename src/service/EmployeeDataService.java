@@ -18,26 +18,26 @@ public class EmployeeDataService {
 
     private final CsvHandler csvHandler;
     private final List<String[]> employeeData;
-    private final ObservableList<Employee> employeeList;
+    private final ObservableList<Employee> employeeRecords;
 
     public EmployeeDataService() {
         this.csvHandler = new CsvHandler("src/database/employeeData.csv");
         employeeData = csvHandler.retrieveCsvData();
-        employeeList = FXCollections.observableArrayList(getAllEmployees());
+        employeeRecords = FXCollections.observableArrayList(getAllEmployeeRecords());
     }
 
-    public List<Employee> getAllEmployees() {
-        List<Employee> employees = new ArrayList<>();
+    public List<Employee> getAllEmployeeRecords() {
+        List<Employee> employeesRecords = new ArrayList<>();
 
         for (int i = 1; i < employeeData.size(); i++) {
             String[] row = employeeData.get(i);
-            employees.add(convertArrayToEmployee(row));
+            employeesRecords.add(createEmployeeRecord(row));
         }
-        return employees;
+        return employeesRecords;
     }
 
     public ObservableList<Employee> getEmployeeList() {
-        return employeeList;
+        return employeeRecords;
     }
 
     public int getNewEmployeeID() {
@@ -67,7 +67,7 @@ public class EmployeeDataService {
         }
 
         employeeData.add(record);
-        employeeList.add(convertArrayToEmployee(record));
+        employeeRecords.add(createEmployeeRecord(record));
 
         csvHandler.appendDataToCsv(record);
         AlertUtil.showRecordSavedAlert();
@@ -84,7 +84,7 @@ public class EmployeeDataService {
             String[] row = employeeData.get(i);
             if (row[0].equals(record[0])) {
                 employeeData.set(i, record);
-                employeeList.set(i - 1, convertArrayToEmployee(record));
+                employeeRecords.set(i - 1, createEmployeeRecord(record));
                 break;
             }
         }
@@ -95,34 +95,35 @@ public class EmployeeDataService {
 
     public void deleteEmployeeRecord(int employeeId) {
         employeeData.removeIf(record -> record[0].equals(String.valueOf(employeeId)));
-        employeeList.removeIf(employee -> employee.getEmployeeId() == employeeId);
+        employeeRecords.removeIf(employee -> employee.employeeId() == employeeId);
 
         csvHandler.writeDataToCsv(employeeData);
         AlertUtil.showRecordDeletedAlert();
         System.out.println("Record deleted");
     }
 
-    public Employee convertArrayToEmployee(String[] employeeData) {
-        return new Employee(Integer.parseInt(employeeData[0]),
-                new PersonalInfo(
-                        employeeData[1],
-                        employeeData[2],
-                        LocalDate.parse(employeeData[3], DATE_FORMAT),
-                        employeeData[4],
-                        employeeData[5]),
-                new EmploymentInfo(LocalDate.parse(employeeData[6], DATE_FORMAT),
-                        employeeData[12],
-                        employeeData[13],
-                        employeeData[14],
-                        employeeData[11]),
-                new GovernmentIds(employeeData[7],
-                        employeeData[8],
-                        employeeData[9],
-                        employeeData[10]),
-                new PayrollInfo(Double.parseDouble(employeeData[15]),
-                        Double.parseDouble(employeeData[16]),
-                        Double.parseDouble(employeeData[17]),
-                        Double.parseDouble(employeeData[18]),
-                        Double.parseDouble(employeeData[19])));
+    private Employee createEmployeeRecord(String[] employeeData) {
+        return new Employee(
+                Integer.parseInt(employeeData[0]),
+                employeeData[1],
+                employeeData[2],
+                LocalDate.parse(employeeData[3], DATE_FORMAT),
+                employeeData[4],
+                employeeData[5],
+                LocalDate.parse(employeeData[6], DATE_FORMAT),
+                employeeData[12],
+                employeeData[13],
+                employeeData[14],
+                employeeData[11],
+                employeeData[7],
+                employeeData[8],
+                employeeData[9],
+                employeeData[10],
+                Double.parseDouble(employeeData[15]),
+                Double.parseDouble(employeeData[16]),
+                Double.parseDouble(employeeData[17]),
+                Double.parseDouble(employeeData[18]),
+                Double.parseDouble(employeeData[19])
+        );
     }
 }

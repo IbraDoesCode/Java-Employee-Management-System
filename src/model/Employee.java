@@ -1,39 +1,53 @@
 package model;
 
-public class Employee {
+import java.time.LocalDate;
 
-    private final int employeeId;
-    private final PersonalInfo personalInfo;
-    private final EmploymentInfo employmentInfo;
-    private final PayrollInfo payrollInfo;
-    private final GovernmentIds governmentIds;
+public record Employee(
+        int employeeId,
+        String firstName,
+        String lastName,
+        LocalDate birthday,
+        String address,
+        String phoneNumber,
+        LocalDate hireDate,
+        String position,
+        String department,
+        String immediateSupervisor,
+        String status,
+        String sssNumber,
+        String philhealthNumber,
+        String tinNumber,
+        String pagibigNumber,
+        double basicSalary,
+        double riceSubsidy,
+        double phoneAllowance,
+        double clothingAllowance,
+        double hourlyRate
 
-    public Employee(int employeeId, PersonalInfo personalInfo, EmploymentInfo employmentInfo, GovernmentIds governmentIds, PayrollInfo payrollInfo) {
-        this.employeeId = employeeId;
-        this.personalInfo = personalInfo;
-        this.employmentInfo = employmentInfo;
-        this.governmentIds = governmentIds;
-        this.payrollInfo = payrollInfo;
-    }
+) {
 
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public PersonalInfo getPersonalInfo() {
-        return personalInfo;
-    }
-
-    public EmploymentInfo getEmploymentInfo() {
-        return employmentInfo;
-    }
-
-    public GovernmentIds getGovernmentIds() {
-        return governmentIds;
-    }
-
-    public PayrollInfo getPayrollInfo() {
-        return payrollInfo;
-    }
-
+//    public String[] toArray() {
+//        return new String[]{
+//                String.valueOf(employeeId),
+//                firstName,
+//                lastName,
+//                String.valueOf(birthday),
+//                address,
+//                phoneNumber,
+//                String.valueOf(hireDate),
+//                position,
+//                department,
+//                immediateSupervisor,
+//                status,
+//                sssNumber,
+//                philhealthNumber,
+//                tinNumber,
+//                pagibigNumber,
+//                String.valueOf(basicSalary),
+//                String.valueOf(riceSubsidy),
+//                String.valueOf(phoneAllowance),
+//                String.valueOf(clothingAllowance),
+//                String.valueOf(hourlyRate)
+//        };
+//    }
 }

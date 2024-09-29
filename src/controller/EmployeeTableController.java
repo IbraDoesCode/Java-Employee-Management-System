@@ -58,9 +58,8 @@ public class EmployeeTableController {
 
     @FXML
     public void handleDeleteRecord() {
-        Employee selectedEmployee = selectedEmployee();
 
-        if (selectedEmployee == null) {
+        if (selectedEmployee() == null) {
             AlertUtil.showNoSelectionAlert("Please select an employee record to delete");
             return;
         }
@@ -68,7 +67,7 @@ public class EmployeeTableController {
         boolean confirmed = AlertUtil.showConfirmationAlert("Confirm Deletion", "Are you sure you want to delete this employee record? This action cannot be undone.");
 
         if (confirmed) {
-            user.deleteEmployee(selectedEmployee.getEmployeeId());
+            user.deleteEmployee(selectedEmployee().employeeId());
         }
     }
 
@@ -116,19 +115,19 @@ public class EmployeeTableController {
 
                 String searchKeyword = newValue.toLowerCase();
 
-                if (String.valueOf(employee.getEmployeeId()).equals(searchKeyword)) {
+                if (String.valueOf(employee.employeeId()).equals(searchKeyword)) {
                     return true;
-                } else if (employee.getPersonalInfo().getLastName().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.lastName().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getPersonalInfo().getFirstName().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.firstName().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getGovernmentIds().getTinNumber().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.tinNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getGovernmentIds().getSssNumber().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.sssNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else if (employee.getGovernmentIds().getPagibigNumber().toLowerCase().contains(searchKeyword)) {
+                } else if (employee.pagibigNumber().toLowerCase().contains(searchKeyword)) {
                     return true;
-                } else return employee.getGovernmentIds().getPhilhealthNumber().toLowerCase().contains(searchKeyword);
+                } else return employee.philhealthNumber().toLowerCase().contains(searchKeyword);
 
             });
 
@@ -148,25 +147,25 @@ public class EmployeeTableController {
 
     private void initializeTableColumns() {
         TableColumn<Employee, String> employeeIdColumn = new TableColumn<>("Employee #");
-        employeeIdColumn.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getEmployeeId())));
+        employeeIdColumn.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().employeeId())));
 
         TableColumn<Employee, String> firstNameColumn = new TableColumn<>("First Name");
-        firstNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPersonalInfo().getFirstName()));
+        firstNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().firstName()));
 
         TableColumn<Employee, String> lastNameColumn = new TableColumn<>("Last Name");
-        lastNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getPersonalInfo().getLastName()));
+        lastNameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().lastName()));
 
         TableColumn<Employee, String> tinNoColumn = new TableColumn<>("Tin #");
-        tinNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGovernmentIds().getTinNumber()));
+        tinNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().tinNumber()));
 
         TableColumn<Employee, String> sssNoColumn = new TableColumn<>("SSS #");
-        sssNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGovernmentIds().getSssNumber()));
+        sssNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().sssNumber()));
 
         TableColumn<Employee, String> philhealthNoColumn = new TableColumn<>("Philhealth #");
-        philhealthNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGovernmentIds().getPhilhealthNumber()));
+        philhealthNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().philhealthNumber()));
 
         TableColumn<Employee, String> pagibigNoColumn = new TableColumn<>("Pagibig #");
-        pagibigNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getGovernmentIds().getPagibigNumber()));
+        pagibigNoColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().pagibigNumber()));
 
         employeeTable.getColumns().addAll(employeeIdColumn, firstNameColumn, lastNameColumn, tinNoColumn, sssNoColumn, philhealthNoColumn, pagibigNoColumn);
     }

@@ -82,13 +82,13 @@ public class PayrollController {
 
     private void populateFields() {
 
-        IdTextField.setText(String.valueOf(employee.getEmployeeId()));
-        nameTextField.setText(employee.getPersonalInfo().getFirstName() + " " + employee.getPersonalInfo().getLastName());
-        basicTextField.setText(String.valueOf(employee.getPayrollInfo().getBasicSalary()));
-        hourlyRateTextField.setText(String.valueOf(employee.getPayrollInfo().getHourlyRate()));
-        riceSubsidyTextField.setText(String.valueOf(employee.getPayrollInfo().getRiceSubsidy()));
-        clothingTextField.setText(String.valueOf(employee.getPayrollInfo().getClothingAllowance()));
-        phoneTextField.setText(String.valueOf(employee.getPayrollInfo().getPhoneAllowance()));
+        IdTextField.setText(String.valueOf(employee.employeeId()));
+        nameTextField.setText(employee.firstName() + " " + employee.lastName());
+        basicTextField.setText(String.valueOf(employee.basicSalary()));
+        hourlyRateTextField.setText(String.valueOf(employee.hourlyRate()));
+        riceSubsidyTextField.setText(String.valueOf(employee.riceSubsidy()));
+        clothingTextField.setText(String.valueOf(employee.clothingAllowance()));
+        phoneTextField.setText(String.valueOf(employee.phoneAllowance()));
 
     }
 

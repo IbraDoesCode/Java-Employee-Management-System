@@ -35,10 +35,10 @@ public class PayrollService {
     public PayrollService(Employee employee, Double hoursWorked, double overTimeHours) {
 
         // Properties
-        this.hourlyRate = employee.getPayrollInfo().getHourlyRate();
-        this.riceSubsidy = employee.getPayrollInfo().getRiceSubsidy();
-        this.clothingAllowance = employee.getPayrollInfo().getClothingAllowance();
-        this.phoneAllowance = employee.getPayrollInfo().getPhoneAllowance();
+        this.hourlyRate = employee.hourlyRate();
+        this.riceSubsidy = employee.riceSubsidy();
+        this.clothingAllowance = employee.clothingAllowance();
+        this.phoneAllowance = employee.phoneAllowance();
         this.hoursWorked = hoursWorked;
         this.overTimeHours = overTimeHours;
 
